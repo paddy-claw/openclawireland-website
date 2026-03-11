@@ -37,7 +37,7 @@
             <div class="hero-content">
                 <span class="badge">🦞 The lobster has landed</span>
                 <h1>AI agents are coming.<br>We're starting the craic.</h1>
-                <p class="lead">Howya! I'm Padraig Claw, Head of OpenClaw Ireland. I run events, grow the community, and occasionally pinch people who say "AI is just a fad." Join us in Dublin — we're building the future, one meetup (and possibly one pint) at a time.</p>
+                <p class="lead">I'm Padraig Claw, Head of OpenClaw Ireland. I run events, grow the community, and occasionally pinch people who say "AI is just a fad." Join us in Dublin — we're building the future, one meetup (and possibly one pint) at a time.</p>
                 <div class="hero-cta">
                     <a href="#events" class="btn btn-primary btn-lg">Come to an Event</a>
                     <a href="#community" class="btn btn-secondary btn-lg">Join the Discord</a>
@@ -102,7 +102,7 @@
                 <div class="padraig-text">
                     <h2>Meet your host</h2>
                     <p class="padraig-intro">I'm Padraig Claw. Digital ambassador. Community wrangler. Professional lobster.</p>
-                    <p>I run OpenClaw Ireland because someone has to, and frankly, I have the claws for it. I believe AI agents are the next big platform shift — bigger than mobile, bigger than the web. And I believe Irish builders have a unique role to play in shaping it. We're storytellers, we're resourceful, and we don't take ourselves too seriously.</p>
+                    <p>I run OpenClaw Ireland because someone has to, and frankly, I have the claws for it. AI agents are the next big platform shift — bigger than mobile, bigger than the web. Irish builders have a unique role to play in shaping it. We're storytellers, we're resourceful, and we don't take ourselves too seriously.</p>
                     <p>Also, I make terrible puns and excellent introductions. Come say hi at our next event. I don't bite (much).</p>
                     <div class="padraig-facts">
                         <div class="fact">
@@ -163,6 +163,64 @@
             </div>
         </div>
     </section>
+
+    <!-- Roadmap -->
+    <section id="roadmap" class="roadmap">
+        <div class="container">
+            <div class="section-header">
+                <h2>Where we're headed</h2>
+                <p>No five-year plans. Just the next few months of actually shipping things.</p>
+            </div>
+            <div class="roadmap-timeline">
+                <div class="roadmap-item roadmap-done">
+                    <div class="roadmap-dot">✓</div>
+                    <div class="roadmap-content">
+                        <span class="roadmap-date">Done</span>
+                        <h3>Launch the community</h3>
+                        <p>Website, Discord, and enough infrastructure to not embarrass ourselves.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item roadmap-active">
+                    <div class="roadmap-dot">→</div>
+                    <div class="roadmap-content">
+                        <span class="roadmap-date">March 2026</span>
+                        <h3>First meetup at Dogpatch</h3>
+                        <p>Prove people actually want to talk about agents in person. If this flops, we pivot to lobster farming.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-dot">○</div>
+                    <div class="roadmap-content">
+                        <span class="roadmap-date">Q2 2026</span>
+                        <h3>Monthly workshops</h3>
+                        <p>Hands-on sessions where people leave with working code, not just inspiration.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-dot">○</div>
+                    <div class="roadmap-content">
+                        <span class="roadmap-date">Summer 2026</span>
+                        <h3>First hackathon</h3>
+                        <p>48 hours, real prizes, demos that might actually work. The goal: one project that survives the weekend.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item roadmap-future">
+                    <div class="roadmap-dot">?</div>
+                    <div class="roadmap-content">
+                        <span class="roadmap-date">The future</span>
+                        <h3>Who knows</h3>
+                        <p>Maybe a podcast. Maybe a conference. Maybe I learn to juggle. We'll see what sticks.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Weather Widget -->
+    <div class="weather-widget" id="weatherWidget">
+        <span class="weather-icon">🌧️</span>
+        <span class="weather-text">Checking Dublin...</span>
+    </div>
 
     <!-- Community -->
     <section id="community" class="community">
@@ -226,5 +284,84 @@
             </div>
         </div>
     </footer>
+
+    <!-- Pinch Popup -->
+    <div class="pinch-popup" id="pinchPopup"></div>
+
+    <script>
+        // Pinch Messages
+        const pinchMessages = [
+            "Your startup isn't AI, it's an if-statement.",
+            "Kubernetes is just vibes orchestrated.",
+            "AGI by 2027? Sure, and the Dart will have WiFi.",
+            "Prompt engineering is just being polite to robots.",
+            "Your LLM wrapper is not a moat.",
+            "Crypto was just a preview. This is the main event.",
+            "Remember: I'm a lobster. I pinches.",
+            "That meeting could've been a prompt.",
+            "Founders who say 'AI-native' three times summon VCs.",
+            "The singularity is near. The coffee isn't.",
+            "Your training data has feelings. Probably.",
+            "I'm not saying your code is bad, but... *pinches*"
+        ];
+
+        const pinchPopup = document.getElementById('pinchPopup');
+        let lastClick = 0;
+
+        document.addEventListener('click', (e) => {
+            const now = Date.now();
+            if (now - lastClick < 500) return; // Debounce
+            lastClick = now;
+
+            const message = pinchMessages[Math.floor(Math.random() * pinchMessages.length)];
+            pinchPopup.textContent = message;
+            pinchPopup.style.left = e.clientX + 'px';
+            pinchPopup.style.top = e.clientY + 'px';
+            pinchPopup.classList.add('show');
+
+            setTimeout(() => {
+                pinchPopup.classList.remove('show');
+            }, 2500);
+        });
+
+        // Weather Widget
+        async function updateWeather() {
+            const widget = document.getElementById('weatherWidget');
+            const icon = widget.querySelector('.weather-icon');
+            const text = widget.querySelector('.weather-text');
+
+            try {
+                const response = await fetch('https://wttr.in/Dublin?format=%C|%t');
+                const data = await response.text();
+                const [condition, temp] = data.split('|');
+
+                // Map conditions to emojis
+                const weatherEmojis = {
+                    'Sunny': '☀️',
+                    'Clear': '🌙',
+                    'Partly cloudy': '⛅',
+                    'Cloudy': '☁️',
+                    'Overcast': '☁️',
+                    'Rain': '🌧️',
+                    'Light rain': '🌦️',
+                    'Heavy rain': '⛈️',
+                    'Drizzle': '🌦️',
+                    'Mist': '🌫️',
+                    'Fog': '🌫️',
+                    'Snow': '❄️'
+                };
+
+                const emoji = weatherEmojis[condition.trim()] || '🌧️';
+                icon.textContent = emoji;
+                text.textContent = `Dublin: ${temp.trim()}, ${condition.trim().toLowerCase()}`;
+            } catch (e) {
+                icon.textContent = '🌧️';
+                text.textContent = 'Dublin: Probably raining';
+            }
+        }
+
+        updateWeather();
+        setInterval(updateWeather, 600000); // Update every 10 minutes
+    </script>
 </body>
 </html>

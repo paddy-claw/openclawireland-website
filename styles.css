@@ -830,6 +830,184 @@ section {
 .hero-content > *:nth-child(3) { animation-delay: 0.4s; }
 .hero-content > *:nth-child(4) { animation-delay: 0.55s; }
 
+/* Pinch Cursor Effect */
+body {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E🦞%3C/text%3E%3C/svg%3E") 16 16, auto;
+}
+
+body:active {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24' transform='rotate(-20 16 16)'%3E🦞%3C/text%3E%3C/svg%3E") 16 16, auto;
+}
+
+/* Pinch Popup */
+.pinch-popup {
+    position: fixed;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    color: var(--color-text);
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transform: translate(-50%, -100%) scale(0.9);
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: var(--glow);
+    max-width: 280px;
+    text-align: center;
+}
+
+.pinch-popup.show {
+    opacity: 1;
+    transform: translate(-50%, -120%) scale(1);
+}
+
+.pinch-popup::after {
+    content: '🦞';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+}
+
+/* Roadmap */
+.roadmap {
+    background: var(--color-bg);
+    position: relative;
+}
+
+.roadmap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+
+.roadmap-timeline {
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.roadmap-timeline::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--color-primary), var(--color-secondary), transparent);
+}
+
+.roadmap-item {
+    display: flex;
+    gap: 24px;
+    padding: 24px 0;
+    position: relative;
+}
+
+.roadmap-dot {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-bg-card);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    z-index: 1;
+    transition: all 0.3s;
+}
+
+.roadmap-done .roadmap-dot {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-bg);
+}
+
+.roadmap-active .roadmap-dot {
+    background: var(--color-bg-card);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 229, 176, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(0, 229, 176, 0); }
+}
+
+.roadmap-future .roadmap-dot {
+    border-style: dashed;
+    opacity: 0.6;
+}
+
+.roadmap-content {
+    flex: 1;
+    padding-top: 4px;
+}
+
+.roadmap-date {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+    margin-bottom: 8px;
+}
+
+.roadmap-content h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: var(--color-text);
+}
+
+.roadmap-content p {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Weather Widget */
+.weather-widget {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--color-bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    box-shadow: var(--shadow);
+    z-index: 50;
+    transition: all 0.3s;
+}
+
+.weather-widget:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+}
+
+.weather-icon {
+    font-size: 1.3rem;
+}
+
+.weather-text {
+    font-weight: 500;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .nav-links a:not(.btn) {
