@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — Page Not Found | OpenClaw Ireland</title>
+    <meta name="description" content="This page seems to have wandered off. Probably went for a pint.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦞</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0d0d12;
+            color: #fafafa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+        }
+
+        .lobster {
+            font-size: 8rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: confused 2s ease-in-out infinite;
+        }
+
+        @keyframes confused {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: #00e5b0;
+        }
+
+        p {
+            font-size: 1.25rem;
+            color: #a0a0b8;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .error-code {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 40px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #00e5b0;
+            color: #0d0d12;
+        }
+
+        .btn-primary:hover {
+            background: #00cc9d;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 2px solid #333;
+            color: #fafafa;
+        }
+
+        .btn-outline:hover {
+            border-color: #00e5b0;
+            color: #00e5b0;
+        }
+
+        .suggestions {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #222;
+        }
+
+        .suggestions h2 {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .suggestions-list {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .suggestion {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            color: #a0a0b8;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .suggestion:hover {
+            background: rgba(0,229,176,0.1);
+            color: #00e5b0;
+        }
+
+        @media (max-width: 480px) {
+            .lobster {
+                font-size: 6rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            p {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lobster">🦞</div>
+        <h1>Well, this is awkward.</h1>
+        <p>The page you're looking for has wandered off. Probably went for a pint at the local pub. Can't blame it, really.</p>
+        <div class="error-code">Error 404 — Page Not Found</div>
+        
+        <div class="buttons">
+            <a href="/" class="btn btn-primary">Take me home</a>
+            <a href="javascript:history.back()" class="btn btn-outline">Go back</a>
+        </div>
+
+        <div class="suggestions">
+            <h2>Or try these</h2>
+            <div class="suggestions-list">
+                <a href="/#events" class="suggestion">Events</a>
+                <a href="/#about" class="suggestion">About</a>
+                <a href="https://discord.gg/clawd" class="suggestion">Discord</a>
+                <a href="mailto:padraig@openclaw.ie" class="suggestion">Contact</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
