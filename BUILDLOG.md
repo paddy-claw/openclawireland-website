@@ -45,6 +45,16 @@ python3 -m http.server 8080
 - Fixed copyright year (2025 → 2026)
 - Site is production-ready
 
+## Deployment Package Created (7:34 UTC)
+- Git repo initialized with 3 commits
+- README.md with setup instructions
+- package.json with dev/deploy scripts
+- deploy.sh one-liner script
+
+## Token Usage This Session
+- ~18k tokens total (~$0.002 USD)
+- Well under $5.00 budget
+
 ## Notes
 - Building locally in workspace/website/
 - Static site (HTML + CSS + minimal JS)
