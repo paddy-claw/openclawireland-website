@@ -1,0 +1,9 @@
+{
+  "name": "openclaw-ireland-website",
+  "version": "1.0.0",
+  "description": "OpenClaw Ireland landing page",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "deploy": "npx vercel --prod"
+  }
+}
