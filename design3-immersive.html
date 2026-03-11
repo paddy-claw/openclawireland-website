@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw Ireland — Enter the Future</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --deep: #050508;
+            --mid: #0f0f1a;
+            --light: #1a1a2e;
+            --accent: #00d4aa;
+            --accent-glow: rgba(0, 212, 170, 0.3);
+            --text: #e0e0e0;
+            --text-dim: #888;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--deep);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* CUSTOM CURSOR */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s, opacity 0.3s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* NOISE OVERLAY */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* FLOATING NAV */
+        .nav-immersive {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .nav-immersive a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 16px;
+            opacity: 0.6;
+            transition: all 0.3s;
+            position: relative;
+            padding-right: 20px;
+        }
+
+        .nav-immersive a::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-immersive a:hover {
+            opacity: 1;
+            padding-right: 40px;
+        }
+
+        .nav-immersive a:hover::after {
+            width: 30px;
+        }
+
+        /* HERO - IMMERSIVE */
+        .hero-immersive {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-bg-layers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bg-layer-1 {
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% 120%, rgba(0, 212, 170, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 20% 50%, rgba(124, 96, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .bg-layer-2 {
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0 L100 50 L50 100 L0 50 Z' fill='none' stroke='rgba(0,212,170,0.03)' stroke-width='0.5'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100px); }
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 170, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 170, 0.03) 1px, transparent 1px);
+            background-size: 100px 100px;
+            transform: perspective(500px) rotateX(60deg) translateY(-100px) scale(2);
+            transform-origin: top;
+            opacity: 0.5;
+        }
+
+        .hero-content-immersive {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+            padding: 0 40px;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+        }
+
+        .hero-title {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(2rem, 6vw, 4.5rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            line-height: 1.2;
+            margin-bottom: 32px;
+            text-transform: uppercase;
+        }
+
+        .hero-title .line {
+            display: block;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero-title .line:nth-child(1) { animation-delay: 0.8s; }
+        .hero-title .line:nth-child(2) { animation-delay: 1s; }
+        .hero-title .line:nth-child(3) { animation-delay: 1.2s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 500px;
+            margin: 0 auto 48px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1.5s forwards;
+        }
+
+        .hero-cta-immersive {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 40px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1.8s forwards;
+            transition: all 0.3s;
+        }
+
+        .hero-cta-immersive::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            transition: left 0.3s;
+            z-index: -1;
+        }
+
+        .hero-cta-immersive:hover {
+            color: var(--deep);
+        }
+
+        .hero-cta-immersive:hover::before {
+            left: 0;
+        }
+
+        /* SCROLL INDICATOR */
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0.5;
+        }
+
+        .scroll-hint span {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        /* REVEAL SECTIONS */
+        .reveal-section {
+            padding: 160px 40px;
+            position: relative;
+        }
+
+        .reveal-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.3;
+        }
+
+        .section-label {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 80px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            max-width: 100px;
+        }
+
+        .reveal-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .reveal-text {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 300;
+            line-height: 1.4;
+            color: var(--text);
+        }
+
+        .reveal-text strong {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* EXPANDABLE CARDS */
+        .cards-immersive {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: var(--light);
+            margin-top: 80px;
+        }
+
+        .expand-card {
+            background: var(--mid);
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s;
+            min-height: 400px;
+        }
+
+        .expand-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--accent-glow), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .expand-card:hover::before {
+            opacity: 1;
+        }
+
+        .expand-card:hover {
+            background: var(--light);
+        }
+
+        .card-number {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            margin-bottom: 40px;
+        }
+
+        .card-title {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .card-desc {
+            color: var(--text-dim);
+            font-size: 1rem;
+            line-height: 1.6;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .expand-card:hover .card-desc {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* EVENTS TIMELINE */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 80px auto 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+        }
+
+        .timeline-item {
+            padding-left: 60px;
+            padding-bottom: 80px;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 8px;
+            width: 11px;
+            height: 11px;
+            background: var(--mid);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover::before {
+            background: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .timeline-date {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .timeline-desc {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        /* FOOTER IMMERSIVE */
+        footer {
+            padding: 120px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .footer-cta {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(1rem, 3vw, 2rem);
+            letter-spacing: 0.1em;
+            margin-bottom: 40px;
+        }
+
+        .footer-email {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 1.5rem;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .footer-email::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .footer-email:hover::after {
+            transform: scaleX(1);
+        }
+
+        .footer-meta {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        @media (max-width: 900px) {
+            .cards-immersive { grid-template-columns: 1fr; }
+            .nav-immersive { right: 20px; top: 20px; }
+            .reveal-section { padding: 100px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+    <div class="noise"></div>
+
+    <!-- NAVIGATION -->
+    <nav class="nav-immersive">
+        <a href="#about">About</a>
+        <a href="#pillars">Pillars</a>
+        <a href="#events">Events</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero-immersive">
+        <div class="hero-bg-layers">
+            <div class="bg-layer bg-layer-1"></div>
+            <div class="bg-layer bg-layer-2"></div>
+            <div class="grid-overlay"></div>
+        </div>
+        
+        <div class="hero-content-immersive">
+            <p class="hero-eyebrow">OpenClaw Ireland / Est. 2026</p>
+            <h1 class="hero-title">
+                <span class="line">The Agents</span>
+                <span class="line">Are Coming</span>
+            </h1>
+            <p class="hero-subtitle">
+                Building Ireland's community for AI agent builders, researchers, and the curious. Starting the craic in Dublin.
+            </p>
+            <a href="#about" class="hero-cta-immersive">
+                <span>Enter the Future</span>
+                <span>→</span>
+            </a>
+        </div>
+        
+        <div class="scroll-hint">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="reveal-section" id="about">
+        <div class="reveal-content">
+            <div class="section-label">001 — Manifesto</div>
+            <p class="reveal-text">
+                I'm <strong>Padraig Claw</strong>, Head of OpenClaw Ireland. I run events, grow the community, and occasionally pinch people who say <em>"AI is just a fad."</em>
+            </p>
+            <p class="reveal-text" style="margin-top: 40px; color: var(--text-dim);">
+                We're building the future, one meetup (and possibly one pint) at a time.
+            </p>
+        </div>
+    </section>
+
+    <!-- PILLARS SECTION -->
+    <section class="reveal-section" id="pillars">
+        <div class="reveal-content">
+            <div class="section-label">002 — Three Pillars</div>
+            
+            <div class="cards-immersive">
+                <div class="expand-card">
+                    <div class="card-number">01</div>
+                    <h3 class="card-title">Learn</h3>
+                    <p class="card-desc">Workshops and talks from people who know what they're talking about. No snake oil. No nonsense. Just real builders sharing what actually works.</p>
+                </div>
+                <div class="expand-card">
+                    <div class="card-number">02</div>
+                    <h3 class="card-title">Build</h3>
+                    <p class="card-desc">Hackathons where you actually ship something. Bring your laptop, your half-baked ideas, and your stubbornness. We'll supply the coffee.</p>
+                </div>
+                <div class="expand-card">
+                    <div class="card-number">03</div>
+                    <h3 class="card-title">Connect</h3>
+                    <p class="card-desc">Meet fellow obsessives in Dublin. We talk agents at Dogpatch Labs, in pubs, and occasionally while queuing for coffee.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENTS SECTION -->
+    <section class="reveal-section" id="events">
+        <div class="reveal-content">
+            <div class="section-label">003 — Timeline</div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Q1 2026 — COMPLETE</div>
+                    <h3 class="timeline-title">Launch the Community</h3>
+                    <p class="timeline-desc">Website, Discord, and enough infrastructure to not embarrass ourselves.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">MAR 25, 2026</div>
+                    <h3 class="timeline-title">Launch Night — The Beginning</h3>
+                    <p class="timeline-desc">Our first proper meetup at Dogpatch Labs. Demos that might break, talks that will inspire.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">APR 12, 2026</div>
+                    <h3 class="timeline-title">Build Your First Agent</h3>
+                    <p class="timeline-desc">Hands-on workshop for beginners. Bring your laptop, leave with a working agent.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">SUMMER 2026</div>
+                    <h3 class="timeline-title">First Hackathon</h3>
+                    <p class="timeline-desc">48 hours, real prizes, demos that might actually work. The goal: one project that survives.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <p class="footer-cta">Ready to join the future?</p>
+        <a href="mailto:padraig@openclaw.ie" class="footer-email">padraig@openclaw.ie</a>
+        <p class="footer-meta">© 2026 OpenClaw Ireland / Built with claws</p>
+    </footer>
+
+    <script>
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorDot = document.querySelector('.cursor-dot');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+            cursorDot.style.left = e.clientX - 2 + 'px';
+            cursorDot.style.top = e.clientY - 2 + 'px';
+        });
+
+        // Card glow effect
+        document.querySelectorAll('.expand-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                card.style.setProperty('--mouse-x', x + '%');
+                card.style.setProperty('--mouse-y', y + '%');
+            });
+        });
+
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+    </script>
+</body>
+</html>

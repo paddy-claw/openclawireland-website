@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw Ireland</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --accent: #ff0000;
+            --gray: #888888;
+            --light-gray: #e5e5e5;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.1;
+            font-size: 16px;
+        }
+
+        /* TYPOGRAPHY SCALE */
+        .mega {
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 0.85;
+            text-transform: uppercase;
+        }
+
+        .huge {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
+
+        .large {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .medium {
+            font-size: 1.25rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .small {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* GRID SYSTEM */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            padding: 0 48px;
+        }
+
+        /* HEADER - ASYMMETRIC */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            mix-blend-mode: difference;
+            color: white;
+        }
+
+        header .grid {
+            padding: 32px 48px;
+            align-items: center;
+        }
+
+        .logo {
+            grid-column: 1 / 3;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        nav {
+            grid-column: 9 / 13;
+            display: flex;
+            justify-content: flex-end;
+            gap: 40px;
+        }
+
+        nav a {
+            color: inherit;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* HERO - FULL BLEED TYPOGRAPHY */
+        .hero-swiss {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content-swiss {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-line {
+            border-top: 2px solid var(--black);
+            padding-top: 24px;
+            margin-top: 48px;
+        }
+
+        .hero-swiss .mega {
+            margin-left: -8px;
+        }
+
+        .hero-sub {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 80px;
+            padding-bottom: 48px;
+            border-bottom: 2px solid var(--black);
+        }
+
+        .hero-sub-left {
+            max-width: 400px;
+        }
+
+        .hero-sub-right {
+            text-align: right;
+        }
+
+        .index-number {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        /* ASYMMETRIC INFO GRID */
+        .info-grid {
+            padding: 120px 0;
+            background: var(--light-gray);
+        }
+
+        .info-item {
+            margin-bottom: 80px;
+        }
+
+        .info-item:nth-child(1) { grid-column: 1 / 6; }
+        .info-item:nth-child(2) { grid-column: 8 / 13; margin-top: 160px; }
+        .info-item:nth-child(3) { grid-column: 4 / 9; margin-top: 80px; }
+
+        .info-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .info-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .info-content p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        /* MANIFESTO SECTION */
+        .manifesto {
+            padding: 160px 48px;
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .manifesto-text {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.2;
+            max-width: 1000px;
+        }
+
+        .manifesto-text em {
+            color: var(--accent);
+            font-style: normal;
+        }
+
+        /* EVENTS - TABLE STYLE */
+        .events-swiss {
+            padding: 120px 0;
+        }
+
+        .section-header-swiss {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 48px 48px;
+            border-bottom: 2px solid var(--black);
+            margin-bottom: 0;
+        }
+
+        .event-row {
+            display: grid;
+            grid-template-columns: 100px 2fr 1fr 150px;
+            gap: 48px;
+            padding: 32px 48px;
+            border-bottom: 1px solid var(--light-gray);
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .event-row:hover {
+            background: var(--light-gray);
+        }
+
+        .event-date-swiss {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .event-title-swiss {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .event-loc {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .event-cta {
+            text-align: right;
+        }
+
+        .event-cta a {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--black);
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+
+        .event-cta a:hover {
+            background: var(--accent);
+        }
+
+        /* STATS - BIG NUMBERS */
+        .stats-swiss {
+            padding: 80px 48px;
+            border-top: 2px solid var(--black);
+            border-bottom: 2px solid var(--black);
+        }
+
+        .stats-grid-swiss {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-swiss {
+            text-align: left;
+        }
+
+        .stat-number-swiss {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+
+        .stat-label-swiss {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        /* FOOTER - MINIMAL */
+        footer {
+            padding: 80px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .footer-left {
+            max-width: 300px;
+        }
+
+        .footer-left h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-left a {
+            color: var(--black);
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-bottom: 2px solid var(--black);
+            transition: all 0.2s;
+        }
+
+        .footer-left a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .footer-right {
+            text-align: right;
+        }
+
+        .footer-right p {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* RED ACCENT DETAILS */
+        .accent-line {
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            margin: 24px 0;
+        }
+
+        @media (max-width: 900px) {
+            .grid { padding: 0 24px; gap: 16px; }
+            .mega { font-size: 3rem; }
+            .event-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .event-cta { text-align: left; }
+            nav { display: none; }
+            .stats-grid-swiss { flex-direction: column; gap: 40px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="grid">
+            <div class="logo">OPENCLAW_IRL</div>
+            <nav>
+                <a href="#info">About</a>
+                <a href="#events">Events</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero-swiss">
+        <div class="grid hero-content-swiss">
+            <div style="grid-column: 1 / 13;">
+                <p class="small" style="margin-bottom: 24px;">EST. 2026 — DUBLIN, IRELAND</p>
+                <h1 class="mega">AI AGENTS<br>ARE COMING</h1>
+            </div>
+            
+            <div class="hero-line" style="grid-column: 1 / 13;">
+                <div class="hero-sub">
+                    <div class="hero-sub-left">
+                        <p class="medium">We're starting the craic. Building Ireland's community for AI agent builders, researchers, and the curious.</p>
+                    </div>
+                    <div class="hero-sub-right">
+                        <p class="index-number">001</p>
+                        <p class="small">Padraig Claw<br>Head of OpenClaw Ireland</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INFO GRID -->
+    <section class="info-grid" id="info">
+        <div class="grid">
+            <div class="info-item">
+                <div class="info-label">01 — LEARN</div>
+                <div class="info-content">
+                    <h3>Knowledge<br>shared</h3>
+                    <div class="accent-line"></div>
+                    <p>Workshops and talks from people who know what they're talking about. No snake oil. No nonsense. Just real builders sharing what actually works.</p>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">02 — BUILD</div>
+                <div class="info-content">
+                    <h3>Ship<br>together</h3>
+                    <div class="accent-line"></div>
+                    <p>Hackathons where you actually ship something. Bring your laptop, your half-baked ideas, and your stubbornness. We'll supply the coffee.</p>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">03 — CONNECT</div>
+                <div class="info-content">
+                    <h3>Find your<br>people</h3>
+                    <div class="accent-line"></div>
+                    <p>Meet fellow obsessives in Dublin. We talk agents at Dogpatch Labs, in pubs, and occasionally while queuing for coffee.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section class="manifesto">
+        <div class="manifesto-text">
+            We're building the future, <em>one meetup</em> (and possibly one pint) <em>at a time.</em>
+        </div>
+    </section>
+
+    <!-- EVENTS -->
+    <section class="events-swiss" id="events">
+        <div class="section-header-swiss">
+            <h2 class="huge">Events</h2>
+            <p class="small" style="color: var(--gray);">Upcoming / 2026</p>
+        </div>
+        
+        <div class="event-row">
+            <div class="event-date-swiss">MAR 25</div>
+            <div class="event-title-swiss">Launch Night — The Beginning</div>
+            <div class="event-loc">Dogpatch Labs, Dublin</div>
+            <div class="event-cta">
+                <a href="#">RSVP →</a>
+            </div>
+        </div>
+        
+        <div class="event-row">
+            <div class="event-date-swiss">APR 12</div>
+            <div class="event-title-swiss">Build Your First Agent Workshop</div>
+            <div class="event-loc">Location TBD, Dublin</div>
+            <div class="event-cta">
+                <a href="#">Notify →</a>
+            </div>
+        </div>
+        
+        <div class="event-row">
+            <div class="event-date-swiss">SUMMER</div>
+            <div class="event-title-swiss">First Hackathon</div>
+            <div class="event-loc">Dublin</div>
+            <div class="event-cta">
+                <a href="#">Info →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-swiss">
+        <div class="stats-grid-swiss">
+            <div class="stat-swiss">
+                <div class="stat-number-swiss">50+</div>
+                <div class="stat-label-swiss">Community members</div>
+            </div>
+            <div class="stat-swiss">
+                <div class="stat-number-swiss">3</div>
+                <div class="stat-label-swiss">Events planned</div>
+            </div>
+            <div class="stat-swiss">
+                <div class="stat-number-swiss">∞</div>
+                <div class="stat-label-swiss">Ideas shared</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="footer-left">
+            <h4>Get in touch</h4>
+            <a href="mailto:padraig@openclaw.ie">padraig@openclaw.ie</a>
+        </div>
+        <div class="footer-right">
+            <p>© 2026 OpenClaw Ireland<br>Built with precision</p>
+        </div>
+    </footer>
+</body>
+</html>
