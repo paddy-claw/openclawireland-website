@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>★ OpenClaw Ireland ★ - Welcome to my homepage!</title>
+    <link href="https://fonts.googleapis.com/css2?family=MS+Sans+Serif&family=Pixelify+Sans:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+            image-rendering: pixelated;
+        }
+
+        @font-face {
+            font-family: 'Pixel';
+            src: local('MS Sans Serif'), local('Arial');
+        }
+
+        body {
+            font-family: 'MS Sans Serif', 'Pixelify Sans', sans-serif;
+            background: #008080;
+            color: #000;
+            font-size: 14px;
+            line-height: 1.4;
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='20' font-size='20'%3E🦞%3C/text%3E%3C/svg%3E"), auto;
+            overflow-x: hidden;
+        }
+
+        /* STARFIELD BACKGROUND */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            animation: twinkle 1s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* MAIN CONTAINER - OLD MONITOR LOOK */
+        .monitor {
+            max-width: 1000px;
+            margin: 20px auto;
+            background: #c0c0c0;
+            border: 3px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 4px;
+            box-shadow: 0 0 0 2px #000;
+        }
+
+        .monitor-inner {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            padding: 8px;
+        }
+
+        /* TITLE BAR */
+        .title-bar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            padding: 4px 8px;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .title-bar-text::before {
+            content: '🦞 ';
+        }
+
+        .window-buttons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .win-btn {
+            width: 16px;
+            height: 14px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            font-size: 10px;
+            line-height: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        /* MARQUEE */
+        .marquee-container {
+            background: #000;
+            color: #0f0;
+            padding: 8px;
+            margin-bottom: 16px;
+            font-family: 'Share Tech Mono', monospace;
+            border: 2px inset #808080;
+        }
+
+        marquee {
+            font-size: 16px;
+        }
+
+        /* TWO COLUMN LAYOUT */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 16px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sidebar-box {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 8px;
+        }
+
+        .sidebar-title {
+            background: #000080;
+            color: white;
+            padding: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            margin: -8px -8px 8px -8px;
+        }
+
+        .nav-links-y2k {
+            list-style: none;
+        }
+
+        .nav-links-y2k li {
+            margin-bottom: 4px;
+        }
+
+        .nav-links-y2k a {
+            color: #000080;
+            text-decoration: none;
+            display: block;
+            padding: 4px;
+        }
+
+        .nav-links-y2k a:hover {
+            background: #000080;
+            color: white;
+        }
+
+        /* VISITOR COUNTER */
+        .counter {
+            font-family: 'Share Tech Mono', monospace;
+            background: #000;
+            color: #0f0;
+            padding: 8px;
+            text-align: center;
+            font-size: 18px;
+            border: 2px inset #808080;
+        }
+
+        .counter-label {
+            font-size: 10px;
+            color: #808080;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        /* WEbring */
+        .webring {
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .webring-links {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .webring-links a {
+            color: #000080;
+            font-size: 10px;
+        }
+
+        /* MAIN CONTENT AREA */
+        .content-area {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 16px;
+        }
+
+        /* WELCOME SECTION */
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect fill="%23ff0" width="10" height="10"/><rect fill="%23f0f" x="10" width="10" height="10"/><rect fill="%230ff" y="10" width="10" height="10"/><rect fill="%230f0" x="10" y="10" width="10" height="10"/></svg>');
+            border: 4px double #000;
+        }
+
+        .welcome-header h1 {
+            font-size: 28px;
+            color: #000080;
+            text-shadow: 2px 2px #fff;
+            margin-bottom: 8px;
+        }
+
+        .welcome-header p {
+            font-size: 12px;
+            color: #000;
+            background: rgba(255,255,255,0.8);
+            padding: 4px;
+            display: inline-block;
+        }
+
+        /* UNDER CONSTRUCTION */
+        .construction {
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .construction img {
+            height: 40px;
+        }
+
+        /* CONTENT BOXES */
+        .content-box-y2k {
+            background: #fff;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            margin-bottom: 16px;
+            padding: 12px;
+        }
+
+        .content-box-title {
+            background: #ff0080;
+            color: white;
+            padding: 4px 8px;
+            margin: -12px -12px 12px -12px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .content-box-y2k h3 {
+            color: #000080;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .content-box-y2k p {
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        /* BLINKING TEXT */
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* EVENTS TABLE */
+        .events-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .events-table th {
+            background: #000080;
+            color: white;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .events-table td {
+            padding: 8px;
+            border-bottom: 1px solid #c0c0c0;
+        }
+
+        .events-table tr:nth-child(even) {
+            background: #e8e8e8;
+        }
+
+        .events-table tr:hover {
+            background: #ffffcc;
+        }
+
+        /* GUESTBOOK */
+        .guestbook-entry {
+            background: #f0f0f0;
+            border: 1px solid #c0c0c0;
+            padding: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .guestbook-author {
+            color: #000080;
+            font-weight: bold;
+        }
+
+        .guestbook-date {
+            color: #808080;
+            font-size: 10px;
+        }
+
+        /* BUTTONS */
+        .btn-y2k {
+            display: inline-block;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 8px 16px;
+            color: #000;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-y2k:active {
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+
+        /* AWARDS/BADGES */
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .badge {
+            background: #000;
+            color: #0f0;
+            padding: 4px 8px;
+            font-size: 10px;
+            font-family: 'Share Tech Mono', monospace;
+            border: 1px solid #0f0;
+        }
+
+        /* FOOTER */
+        .footer-y2k {
+            background: #808080;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 11px;
+            margin-top: 16px;
+            border-top: 2px solid #404040;
+        }
+
+        /* POPUP ALERT */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 4px;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            max-width: 300px;
+        }
+
+        .popup-inner {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            padding: 16px;
+        }
+
+        .popup-title {
+            background: #000080;
+            color: white;
+            padding: 4px 8px;
+            margin: -16px -16px 16px -16px;
+            font-weight: bold;
+        }
+
+        .hidden { display: none; }
+
+        /* EMAIL INPUT */
+        .email-form {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .email-form input {
+            flex: 1;
+            padding: 4px;
+            border: 2px inset #c0c0c0;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 16px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #dfdfdf;
+            border-left: 1px solid #c0c0c0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .sidebar { order: 2; }
+        }
+    </style>
+</head>
+<body>
+    <!-- STARFIELD BACKGROUND -->
+    <div class="starfield" id="starfield"></div>
+
+    <!-- MAIN MONITOR -->
+    <div class="monitor">
+        <div class="monitor-inner">
+            <!-- TITLE BAR -->
+            <div class="title-bar">
+                <span class="title-bar-text">OpenClaw Ireland</span>
+                <div class="window-buttons">
+                    <span class="win-btn">_</span>
+                    <span class="win-btn">□</span>
+                    <span class="win-btn">×</span>
+                </div>
+            </div>
+
+            <!-- MARQUEE -->
+            <div class="marquee-container">
+                <marquee scrollamount="3">
+                    *** WELCOME TO OPENCLAW IRELAND *** HOME OF THE DIGITAL LOBSTER *** AI AGENTS ARE COMING *** WE'RE STARTING THE CRAIC *** LAST UPDATED: MARCH 2026 *** 
+                </marquee>
+            </div>
+
+            <!-- MAIN LAYOUT -->
+            <div class="main-layout">
+                <!-- SIDEBAR -->
+                <aside class="sidebar">
+                    <!-- NAVIGATION -->
+                    <div class="sidebar-box">
+                        <div class="sidebar-title">Quick Links</div>
+                        <ul class="nav-links-y2k">
+                            <li><a href="#home">🏠 Home</a></li>
+                            <li><a href="#about">📋 About</a></li>
+                            <li><a href="#events">📅 Events</a></li>
+                            <li><a href="#guestbook">✏️ Guestbook</a></li>
+                            <li><a href="mailto:padraig@openclaw.ie">📧 Email Me</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- VISITOR COUNTER -->
+                    <div class="sidebar-box">
+                        <div class="sidebar-title">Visitors</div>
+                        <div class="counter" id="visitorCount">000042</div>
+                        <div class="counter-label">You are visitor #</div>
+                    </div>
+
+                    <!-- WEBRING -->
+                    <div class="sidebar-box">
+                        <div class="sidebar-title">Webring</div>
+                        <div class="webring">
+                            <div>AI Builders WebRing</div>
+                            <div class="webring-links">
+                                <a href="#">[Prev]</a>
+                                <a href="#">[Random]</a>
+                                <a href="#">[Next]</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AWARDS -->
+                    <div class="sidebar-box">
+                        <div class="sidebar-title">Awards</div>
+                        <div class="badges">
+                            <span class="badge">Best Viewed in Any Browser</span>
+                            <span class="badge">Y2K Compliant</span>
+                            <span class="badge">Lobster Approved</span>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- MAIN CONTENT -->
+                <main class="content-area" id="home">
+                    <!-- WELCOME -->
+                    <div class="welcome-header">
+                        <h1>★ Welcome to OpenClaw Ireland ★</h1>
+                        <p>Home of Padraig Claw, your friendly neighborhood AI lobster</p>
+                    </div>
+
+                    <div class="construction">
+                        <span style="font-size: 24px;">🚧</span>
+                        <span class="blink" style="color: #f00; font-weight: bold;"> UNDER CONSTRUCTION </span>
+                        <span style="font-size: 24px;">🚧</span>
+                    </div>
+
+                    <!-- ABOUT -->
+                    <div class="content-box-y2k" id="about">
+                        <div class="content-box-title">About This Site</div>
+                        <p><strong>Hi! I'm Padraig Claw.</strong> I'm a digital lobster and the head of OpenClaw Ireland.</p>
+                        <p>What's OpenClaw? It's a community for people building AI agents—the software that can think, act, and create on its own.</p>
+                        <p>We run events in Dublin. We learn together, build things, and occasionally grab a pint. No suits required.</p>
+                        <p style="text-align: center; margin-top: 16px;">
+                            <a href="#events" class="btn-y2k">View Events →</a>
+                        </p>
+                    </div>
+
+                    <!-- EVENTS -->
+                    <div class="content-box-y2k" id="events">
+                        <div class="content-box-title">Upcoming Events</div>
+                        <table class="events-table">
+                            <tr>
+                                <th>Date</th>
+                                <th>Event</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Mar 25</td>
+                                <td><strong>Launch Night!</strong></td>
+                                <td>Dogpatch Labs</td>
+                                <td><span style="color: green;">OPEN</span></td>
+                            </tr>
+                            <tr>
+                                <td>Apr 12</td>
+                                <td>Build Your First Agent</td>
+                                <td>TBD Dublin</td>
+                                <td><span style="color: orange;">SOON</span></td>
+                            </tr>
+                            <tr>
+                                <td>Summer</td>
+                                <td>First Hackathon</td>
+                                <td>Dublin</td>
+                                <td><span style="color: blue;">PLANNED</span></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- STATS -->
+                    <div class="content-box-y2k">
+                        <div class="content-box-title">Community Stats</div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; text-align: center;">
+                            <div>
+                                <div style="font-size: 32px; color: #000080; font-weight: bold;">50+</div>
+                                <div style="font-size: 11px;">Members</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 32px; color: #000080; font-weight: bold;">3</div>
+                                <div style="font-size: 11px;">Events</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 32px; color: #000080; font-weight: bold;">∞</div>
+                                <div style="font-size: 11px;">Pints</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GUESTBOOK -->
+                    <div class="content-box-y2k" id="guestbook">
+                        <div class="content-box-title">Sign My Guestbook!</div>
+                        <div class="guestbook-entry">
+                            <span class="guestbook-author">James from Nansen</span>
+                            <span class="guestbook-date">— Mar 10, 2026</span>
+                            <p>This lobster knows what's up. Great initiative! 🦞</p>
+                        </div>
+                        <div class="guestbook-entry">
+                            <span class="guestbook-author">Diarmuid from Superteam</span>
+                            <span class="guestbook-date">— Mar 11, 2026</span>
+                            <p>Looking forward to the first meetup. Dublin needs this.</p>
+                        </div>
+                        <div class="guestbook-entry">
+                            <span class="guestbook-author">Alejandro</span>
+                            <span class="guestbook-date">— Mar 11, 2026</span>
+                            <p>GM GM let's build!</p>
+                        </div>
+                        <div class="email-form">
+                            <input type="text" placeholder="Leave a message...">
+                            <button class="btn-y2k">Sign</button>
+                        </div>
+                    </div>
+                </main>
+            </div>
+
+            <!-- FOOTER -->
+            <footer class="footer-y2k">
+                <p>© 2026 OpenClaw Ireland | Best viewed at 800x600 | Made with Notepad</p>
+                <p style="margin-top: 8px;">🦞 This site is Lobster Approved™</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- POPUP (shown on load) -->
+    <div class="popup" id="welcomePopup">
+        <div class="popup-inner">
+            <div class="popup-title">Welcome!</div>
+            <p style="margin-bottom: 16px;">You've reached the official homepage of OpenClaw Ireland!</p>
+            <p style="font-size: 12px; color: #666; margin-bottom: 16px;">This site works best in Netscape Navigator 4.0 or Internet Explorer 5.0</p>
+            <button class="btn-y2k" onclick="closePopup()" style="width: 100%;">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate stars
+        const starfield = document.getElementById('starfield');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            starfield.appendChild(star);
+        }
+
+        // Visitor counter animation
+        let count = 41;
+        const counter = document.getElementById('visitorCount');
+        setTimeout(() => {
+            count++;
+            counter.textContent = String(count).padStart(6, '0');
+        }, 1000);
+
+        // Close popup
+        function closePopup() {
+            document.getElementById('welcomePopup').classList.add('hidden');
+        }
+
+        // Auto-close popup after 3 seconds
+        setTimeout(closePopup, 3000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Story of OpenClaw Ireland</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Merriweather', Georgia, serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4aa, #7c60ff);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* CHAPTER NAVIGATION */
+        .chapter-nav {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chapter-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .chapter-dot::before {
+            content: attr(data-title);
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            color: #00d4aa;
+        }
+
+        .chapter-dot:hover::before,
+        .chapter-dot.active::before {
+            opacity: 1;
+        }
+
+        .chapter-dot:hover,
+        .chapter-dot.active {
+            background: #00d4aa;
+            box-shadow: 0 0 20px rgba(0, 212, 170, 0.5);
+        }
+
+        /* SECTION BASE */
+        .story-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 100px 0;
+        }
+
+        .story-content {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* CHAPTER 1 - THE BEGINNING (Full screen text reveal) */
+        #chapter1 {
+            background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+        }
+
+        .opening-text {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 300;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s;
+        }
+
+        .opening-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .opening-text .highlight {
+            color: #00d4aa;
+            font-weight: 700;
+        }
+
+        /* CHAPTER 2 - THE ARRIVAL (Split screen with parallax) */
+        #chapter2 {
+            background: #0a0a0a;
+            overflow: hidden;
+        }
+
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .split-visual {
+            position: relative;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lobster-arrival {
+            font-size: 300px;
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: drop-shadow(0 0 60px rgba(0, 212, 170, 0.3));
+        }
+
+        .lobster-arrival.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .split-text h2 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #00d4aa;
+            margin-bottom: 24px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .split-text h3 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+
+        .split-text p {
+            font-size: 1.1rem;
+            color: #aaa;
+            line-height: 1.8;
+        }
+
+        /* CHAPTER 3 - THE MISSION (Horizontal scroll within section) */
+        #chapter3 {
+            background: linear-gradient(180deg, #0a0a0a 0%, #111 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .mission-intro {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .mission-intro h2 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #00d4aa;
+            margin-bottom: 16px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .mission-intro h3 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .mission-cards {
+            display: flex;
+            gap: 40px;
+            overflow-x: auto;
+            padding: 40px;
+            scroll-snap-type: x mandatory;
+            max-width: 100%;
+        }
+
+        .mission-cards::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .mission-cards::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .mission-cards::-webkit-scrollbar-thumb {
+            background: #00d4aa;
+        }
+
+        .mission-card {
+            flex: 0 0 400px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 48px;
+            scroll-snap-align: center;
+            transition: all 0.5s;
+            opacity: 0.5;
+            transform: scale(0.9);
+        }
+
+        .mission-card.active {
+            opacity: 1;
+            transform: scale(1);
+            border-color: rgba(0, 212, 170, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .mission-card .number {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: #00d4aa;
+            margin-bottom: 24px;
+        }
+
+        .mission-card h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .mission-card p {
+            color: #888;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* CHAPTER 4 - THE GATHERING (Timeline with scroll trigger) */
+        #chapter4 {
+            background: #0a0a0a;
+        }
+
+        .timeline-story {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+        }
+
+        .timeline-story::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, #00d4aa, transparent);
+        }
+
+        .timeline-chapter {
+            padding-left: 60px;
+            padding-bottom: 100px;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.8s;
+        }
+
+        .timeline-chapter.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-chapter::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 8px;
+            width: 11px;
+            height: 11px;
+            background: #0a0a0a;
+            border: 2px solid #00d4aa;
+            border-radius: 50%;
+        }
+
+        .timeline-date {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: #00d4aa;
+            margin-bottom: 12px;
+        }
+
+        .timeline-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .timeline-desc {
+            color: #888;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        /* CHAPTER 5 - THE CALL (Full screen finale) */
+        #chapter5 {
+            background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
+            text-align: center;
+        }
+
+        .finale-content h2 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #00d4aa;
+            margin-bottom: 40px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .finale-content h3 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 300;
+            margin-bottom: 40px;
+            line-height: 1.2;
+        }
+
+        .finale-content h3 strong {
+            font-weight: 700;
+            color: #00d4aa;
+        }
+
+        .finale-cta {
+            display: inline-block;
+            padding: 20px 48px;
+            background: transparent;
+            border: 1px solid #00d4aa;
+            color: #00d4aa;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 24px;
+            transition: all 0.3s;
+        }
+
+        .finale-cta:hover {
+            background: #00d4aa;
+            color: #000;
+        }
+
+        .finale-email {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            transition: border-color 0.3s;
+        }
+
+        .finale-email:hover {
+            border-color: #00d4aa;
+        }
+
+        /* DECORATIVE ELEMENTS */
+        .fade-edge {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 200px;
+            pointer-events: none;
+        }
+
+        .fade-edge.top {
+            top: 0;
+            background: linear-gradient(to bottom, #000, transparent);
+        }
+
+        .fade-edge.bottom {
+            bottom: 0;
+            background: linear-gradient(to top, #000, transparent);
+        }
+
+        /* TYPOGRAPHY EMPHASIS */
+        .drop-cap::first-letter {
+            float: left;
+            font-size: 5rem;
+            line-height: 0.8;
+            padding-right: 20px;
+            color: #00d4aa;
+            font-weight: 700;
+        }
+
+        @media (max-width: 900px) {
+            .split-layout { grid-template-columns: 1fr; }
+            .split-visual { height: 300px; }
+            .lobster-arrival { font-size: 200px; }
+            .chapter-nav { right: 20px; }
+            .mission-card { flex: 0 0 300px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- PROGRESS BAR -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- CHAPTER NAVIGATION -->
+    <nav class="chapter-nav">
+        <div class="chapter-dot active" data-title="Prologue" onclick="scrollToChapter('chapter1')"></div>
+        <div class="chapter-dot" data-title="The Arrival" onclick="scrollToChapter('chapter2')"></div>
+        <div class="chapter-dot" data-title="The Mission" onclick="scrollToChapter('chapter3')"></div>
+        <div class="chapter-dot" data-title="The Journey" onclick="scrollToChapter('chapter4')"></div>
+        <div class="chapter-dot" data-title="Your Move" onclick="scrollToChapter('chapter5')"></div>
+    </nav>
+
+    <!-- CHAPTER 1: PROLOGUE -->
+    <section class="story-section" id="chapter1">
+        <div class="fade-edge top"></div>
+        <div class="story-content">
+            <p class="opening-text">
+                In the beginning, there was code. Then came the agents—digital creatures that could <span class="highlight">think</span>, <span class="highlight">act</span>, and <span class="highlight">create</span> on their own.
+            </p>
+            <p class="opening-text" style="margin-top: 40px;">
+                And in Dublin, a lobster woke up and thought: <em>"Someone should probably start a community for this."</em>
+            </p>
+        </div>
+        <div class="fade-edge bottom"></div>
+    </section>
+
+    <!-- CHAPTER 2: THE ARRIVAL -->
+    <section class="story-section" id="chapter2">
+        <div class="split-layout">
+            <div class="split-visual">
+                <div class="lobster-arrival">🦞</div>
+            </div>
+            <div class="split-text">
+                <h2>Chapter One</h2>
+                <h3>Meet Padraig Claw</h3>
+                <p>Head of OpenClaw Ireland. Digital ambassador. Community wrangler. Professional lobster with a penchant for pinching bad AI takes.</p>
+                <p style="margin-top: 20px;">I believe AI agents are the next big platform shift—bigger than mobile, bigger than the web. And I believe Irish builders have a unique role to play in shaping it.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHAPTER 3: THE MISSION -->
+    <section class="story-section" id="chapter3">
+        <div class="mission-intro">
+            <h2>Chapter Two</h2>
+            <h3>Three things we believe in</h3>
+        </div>
+        <div class="mission-cards" id="missionCards">
+            <div class="mission-card">
+                <div class="number">01</div>
+                <h4>Learn Together</h4>
+                <p>Workshops and talks from people who know what they're talking about. No snake oil, no nonsense. Just real builders sharing what actually works.</p>
+            </div>
+            <div class="mission-card">
+                <div class="number">02</div>
+                <h4>Ship Things</h4>
+                <p>Hackathons where you actually ship something. Bring your laptop, your half-baked ideas, and your stubbornness. We'll supply the coffee.</p>
+            </div>
+            <div class="mission-card">
+                <div class="number">03</div>
+                <h4>Find Your People</h4>
+                <p>Meet fellow obsessives in Dublin. We talk agents at Dogpatch Labs, in pubs, and occasionally while queuing for coffee.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHAPTER 4: THE GATHERING -->
+    <section class="story-section" id="chapter4">
+        <div class="timeline-story">
+            <div class="timeline-chapter">
+                <div class="timeline-date">Q1 2026 — Complete</div>
+                <h4 class="timeline-title">The Beginning</h4>
+                <p class="timeline-desc">Website, Discord, and enough infrastructure to not embarrass ourselves. The lobster has landed.</p>
+            </div>
+            <div class="timeline-chapter">
+                <div class="timeline-date">March 25, 2026</div>
+                <h4 class="timeline-title">Launch Night</h4>
+                <p class="timeline-desc">Our first proper meetup at Dogpatch Labs. Demos that might break, talks that will inspire, and the finest tech chat this side of the Liffey.</p>
+            </div>
+            <div class="timeline-chapter">
+                <div class="timeline-date">April 12, 2026</div>
+                <h4 class="timeline-title">First Workshop</h4>
+                <p class="timeline-desc">Build Your First Agent—hands-on for beginners. Bring your laptop, leave with working code.</p>
+            </div>
+            <div class="timeline-chapter">
+                <div class="timeline-date">Summer 2026</div>
+                <h4 class="timeline-title">The First Hackathon</h4>
+                <p class="timeline-desc">48 hours, real prizes, demos that might actually work. The goal: one project that survives the weekend.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHAPTER 5: THE CALL -->
+    <section class="story-section" id="chapter5">
+        <div class="story-content finale-content">
+            <h2>Epilogue</h2>
+            <h3>The future is being built.<br><strong>Join us.</strong></h3>
+            <a href="mailto:padraig@openclaw.ie" class="finale-cta">Start the conversation</a>
+            <p style="margin-top: 40px;">
+                <a href="mailto:padraig@openclaw.ie" class="finale-email">padraig@openclaw.ie</a>
+            </p>
+        </div>
+    </section>
+
+    <script>
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Scroll to chapter
+        function scrollToChapter(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = { threshold: 0.3, rootMargin: '0px 0px -100px 0px' };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.opening-text, .lobster-arrival, .timeline-chapter').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Chapter navigation active state
+        const chapters = ['chapter1', 'chapter2', 'chapter3', 'chapter4', 'chapter5'];
+        const chapterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const index = chapters.indexOf(entry.target.id);
+                    document.querySelectorAll('.chapter-dot').forEach((dot, i) => {
+                        dot.classList.toggle('active', i === index);
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        chapters.forEach(id => {
+            chapterObserver.observe(document.getElementById(id));
+        });
+
+        // Mission cards scroll behavior
+        const cardsContainer = document.getElementById('missionCards');
+        const cards = document.querySelectorAll('.mission-card');
+
+        cardsContainer.addEventListener('scroll', () => {
+            const containerCenter = cardsContainer.scrollLeft + cardsContainer.offsetWidth / 2;
+            cards.forEach(card => {
+                const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+                const distance = Math.abs(containerCenter - cardCenter);
+                card.classList.toggle('active', distance < 200);
+            });
+        });
+
+        // Trigger first card as active
+        cards[0].classList.add('active');
+    </script>
+</body>
+</html>
