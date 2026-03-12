@@ -418,6 +418,18 @@
             max-width: 1000px;
             margin: 0 auto;
         }
+        .room-bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 24px;
+        }
+        .room-info {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 212, 170, 0.1);
+            border-radius: 8px;
+            padding: 24px;
+        }
         .activity-feed {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(0, 212, 170, 0.1);
@@ -679,20 +691,6 @@
                 <div class="room-canvas-container">
                     <canvas id="roomCanvas" width="800" height="500"></canvas>
                 </div>
-                <div class="room-info">
-                    <div class="room-stat">
-                        <span class="room-stat-label">Current Activity</span>
-                        <span class="room-stat-value" id="activityValue">Initializing...</span>
-                    </div>
-                    <div class="room-stat">
-                        <span class="room-stat-label">Time in Dublin</span>
-                        <span class="room-stat-value" id="dublinTime">--:--</span>
-                    </div>
-                    <div class="room-stat">
-                        <span class="room-stat-label">Session Duration</span>
-                        <span class="room-stat-value" id="sessionTime">0m</span>
-                    </div>
-                </div>
                 <div class="room-legend">
                     <div class="legend-item">
                         <span class="legend-dot sleeping"></span>
@@ -708,11 +706,27 @@
                     </div>
                 </div>
             </div>
-            <div class="activity-feed" id="activityFeed">
-                <div class="activity-feed-title">Recent Activity</div>
-                <div id="activityFeedContent">
-                    <div class="activity-item">
-                        <div class="activity-text">Loading history...</div>
+            <div class="room-bottom">
+                <div class="room-info">
+                    <div class="room-stat">
+                        <span class="room-stat-label">Current Activity</span>
+                        <span class="room-stat-value" id="activityValue">Initializing...</span>
+                    </div>
+                    <div class="room-stat">
+                        <span class="room-stat-label">Time in Dublin</span>
+                        <span class="room-stat-value" id="dublinTime">--:--</span>
+                    </div>
+                    <div class="room-stat">
+                        <span class="room-stat-label">Session Duration</span>
+                        <span class="room-stat-value" id="sessionTime">0m</span>
+                    </div>
+                </div>
+                <div class="activity-feed" id="activityFeed">
+                    <div class="activity-feed-title">Recent Activity</div>
+                    <div id="activityFeedContent">
+                        <div class="activity-item">
+                            <div class="activity-text">Loading history...</div>
+                        </div>
                     </div>
                 </div>
             </div>
