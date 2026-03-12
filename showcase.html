@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw Ireland — Design Showcase</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a2e; color: #fff; min-height: 100vh; }
+        .showcase-bar { position: fixed; top: 0; left: 0; right: 0; background: #16213e; border-bottom: 2px solid #0f3460; padding: 16px 24px; display: flex; align-items: center; gap: 24px; z-index: 10000; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .showcase-logo { font-weight: 700; font-size: 1.1rem; color: #e94560; display: flex; align-items: center; gap: 8px; }
+        .showcase-logo::before { content: '🦞'; }
+        .version-switcher { display: flex; gap: 8px; flex-wrap: wrap; }
+        .version-btn { padding: 10px 18px; background: #0f3460; border: 2px solid transparent; color: #fff; cursor: pointer; border-radius: 8px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; }
+        .version-btn:hover { background: #1a4a7a; transform: translateY(-2px); }
+        .version-btn.active { background: #e94560; border-color: #ff6b6b; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3); }
+        .version-label { font-size: 0.75rem; opacity: 0.7; display: block; margin-bottom: 2px; }
+        .version-name { font-weight: 600; }
+        .current-info { margin-left: auto; padding: 12px 20px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.85rem; max-width: 400px; }
+        .current-info strong { color: #e94560; }
+        .preview-container { position: fixed; top: 80px; left: 0; right: 0; bottom: 0; background: #000; }
+        .version-frame { width: 100%; height: 100%; border: none; display: none; }
+        .version-frame.active { display: block; }
+        @media (max-width: 1100px) { .showcase-bar { flex-direction: column; padding: 12px; gap: 12px; } .version-switcher { justify-content: center; max-width: 100%; } .current-info { margin-left: 0; max-width: 100%; text-align: center; } .preview-container { top: 160px; } }
+    </style>
+</head>
+<body>
+    <div class="showcase-bar">
+        <div class="showcase-logo">Design Showcase</div>
+        <div class="version-switcher">
+            <button class="version-btn active" onclick="switchVersion(1)"><span class="version-label">V1</span><span class="version-name">Brutalism</span></button>
+            <button class="version-btn" onclick="switchVersion(2)"><span class="version-label">V2</span><span class="version-name">Editorial</span></button>
+            <button class="version-btn" onclick="switchVersion(3)"><span class="version-label">V3</span><span class="version-name">Heritage</span></button>
+            <button class="version-btn" onclick="switchVersion(4)"><span class="version-label">V4</span><span class="version-name">Playful</span></button>
+            <button class="version-btn" onclick="switchVersion(5)"><span class="version-label">V5</span><span class="version-name">Retro</span></button>
+            <button class="version-btn" onclick="switchVersion(6)"><span class="version-label">V6</span><span class="version-name">Illustrated</span></button>
+            <button class="version-btn" onclick="switchVersion(7)"><span class="version-label">V7</span><span class="version-name">Swiss</span></button>
+            <button class="version-btn" onclick="switchVersion(8)"><span class="version-label">V8</span><span class="version-name">Immersive</span></button>
+            <button class="version-btn" onclick="switchVersion(9)"><span class="version-label">V9</span><span class="version-name">Scrolly</span></button>
+            <button class="version-btn" onclick="switchVersion(10)"><span class="version-label">V10</span><span class="version-name">Y2K</span></button>
+            <button class="version-btn" onclick="switchVersion(11)"><span class="version-label">V11</span><span class="version-name">Organic</span></button>
+            <button class="version-btn" onclick="switchVersion(12)"><span class="version-label">V12</span><span class="version-name">Rooted</span></button>
+            <button class="version-btn" onclick="switchVersion(13)"><span class="version-label">V13</span><span class="version-name">Living</span></button>
+        </div>
+        <div class="current-info" id="currentInfo"><strong>Warm Brutalism:</strong> Raw, anti-corporate aesthetic with grid lines, heavy borders, and monospace fonts. Cream backgrounds instead of dark mode.</div>
+    </div>
+
+    <div class="preview-container">
+        <iframe class="version-frame active" id="frame1" src="v1-brutalism.html"></iframe>
+        <iframe class="version-frame" id="frame2" src="v2-editorial.html"></iframe>
+        <iframe class="version-frame" id="frame3" src="v3-heritage.html"></iframe>
+        <iframe class="version-frame" id="frame4" src="v4-playful.html"></iframe>
+        <iframe class="version-frame" id="frame5" src="v5-retro.html"></iframe>
+        <iframe class="version-frame" id="frame6" src="design1-illustrated.html"></iframe>
+        <iframe class="version-frame" id="frame7" src="design2-swiss.html"></iframe>
+        <iframe class="version-frame" id="frame8" src="design3-immersive.html"></iframe>
+        <iframe class="version-frame" id="frame9" src="design4-scrollytelling.html"></iframe>
+        <iframe class="version-frame" id="frame10" src="design5-y2k.html"></iframe>
+        <iframe class="version-frame" id="frame11" src="design6-organic.html"></iframe>
+        <iframe class="version-frame" id="frame12" src="design7-rooted.html"></iframe>
+        <iframe class="version-frame" id="frame13" src="design8-living.html"></iframe>
+    </div>
+
+    <script>
+        const descriptions = {
+            1: "<strong>Warm Brutalism:</strong> Raw, anti-corporate aesthetic with grid lines, heavy borders, and monospace fonts.",
+            2: "<strong>Print Editorial:</strong> Magazine-style with serif headlines, pull quotes, and asymmetric layouts.",
+            3: "<strong>Irish Heritage:</strong> Deep greens, rust oranges, gold accents. Celtic patterns, Playfair Display.",
+            4: "<strong>Playful:</strong> Rounded everything, bouncy shadows, wiggling lobster. Comic fonts, bright colors.",
+            5: "<strong>Retro Tech:</strong> CRT scanlines, flicker effects. Terminal fonts, amber/green phosphor. 90s hacker nostalgia.",
+            6: "<strong>Illustrated:</strong> Playful illustrated style with lobsters and character-driven design elements.",
+            7: "<strong>Swiss Style:</strong> Clean typography-driven design with grid systems and bold geometric elements.",
+            8: "<strong>Immersive:</strong> Full-screen video background, cinematic text reveal, high impact visuals.",
+            9: "<strong>Scrollytelling:</strong> Narrative scroll experience with chapter navigation and progress bar.",
+            10: "<strong>Y2K Aesthetic:</strong> Chrome effects, gradients, retro-futurism from the early 2000s.",
+            11: "<strong>Organic:</strong> Nature-inspired with flowing shapes, organic colors, soft animations.",
+            12: "<strong>Rooted:</strong> Grounded, earthy design with floating navigation and natural motifs.",
+            13: "<strong>Living Network:</strong> Interactive neural background, custom cursor, terminal overlay, easter eggs. Built to maximize engagement."
+        };
+
+        function switchVersion(n) {
+            document.querySelectorAll('.version-btn').forEach((btn, i) => btn.classList.toggle('active', i === n - 1));
+            document.querySelectorAll('.version-frame').forEach((frame, i) => frame.classList.toggle('active', i === n - 1));
+            document.getElementById('currentInfo').innerHTML = descriptions[n];
+        }
+    </script>
+</body>
+</html>

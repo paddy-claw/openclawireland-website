@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw Ireland — The Living Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --neon-cyan: #00f5d4; --neon-purple: #c77dff; --dark-bg: #0a0a0f; --card-bg: rgba(255,255,255,0.03); --text-primary: #f0f0f5; --text-secondary: #888899; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Space Grotesk', sans-serif; background: var(--dark-bg); color: var(--text-primary); overflow-x: hidden; cursor: none; }
+        .cursor { width: 20px; height: 20px; border: 2px solid var(--neon-cyan); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s; mix-blend-mode: difference; }
+        .cursor-follower { width: 40px; height: 40px; background: radial-gradient(circle, rgba(0,245,212,0.3) 0%, transparent 70%); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transition: transform 0.3s ease-out; }
+        .cursor.hover { transform: scale(2); border-color: #ff006e; }
+        #neural-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .terminal-overlay { position: fixed; bottom: 30px; left: 30px; max-width: 600px; background: rgba(10,10,15,0.95); border: 1px solid rgba(0,245,212,0.3); border-radius: 12px; padding: 20px; z-index: 100; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; backdrop-filter: blur(20px); transform: translateY(120%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .terminal-overlay.active { transform: translateY(0); }
+        .terminal-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: var(--neon-cyan); }
+        .terminal-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--neon-cyan); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .terminal-content { color: var(--text-secondary); line-height: 1.6; }
+        .terminal-content .highlight { color: var(--neon-cyan); }
+        .terminal-input-line { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+        .terminal-prompt { color: var(--neon-purple); }
+        .terminal-input { background: transparent; border: none; outline: none; color: var(--text-primary); font-family: inherit; font-size: inherit; flex: 1; caret-color: var(--neon-cyan); }
+        .nav-living { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: 24px 48px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(10,10,15,0.9), transparent); }
+        .logo-living { font-size: 1.3rem; font-weight: 600; display: flex; align-items: center; gap: 12px; }
+        .logo-living::before { content: '🦞'; font-size: 1.5rem; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .nav-links { display: flex; gap: 8px; }
+        .nav-node { padding: 10px 20px; border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; transition: all 0.3s; position: relative; overflow: hidden; }
+        .nav-node::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); opacity: 0; transition: opacity 0.3s; z-index: -1; }
+        .nav-node:hover { color: var(--dark-bg); border-color: transparent; }
+        .nav-node:hover::before { opacity: 1; }
+        .hero-living { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; z-index: 10; padding: 120px 48px; text-align: center; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0,245,212,0.1); border: 1px solid rgba(0,245,212,0.3); border-radius: 100px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--neon-cyan); margin-bottom: 40px; }
+        .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--neon-cyan); border-radius: 50%; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .hero-living h1 { font-size: clamp(2.5rem, 7vw, 6rem); font-weight: 300; line-height: 1; margin-bottom: 24px; }
+        .hero-living h1 strong { font-weight: 700; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-subtitle { font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin-bottom: 48px; line-height: 1.6; }
+        .hero-cta-group { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .btn-primary { padding: 16px 32px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); color: var(--dark-bg); text-decoration: none; border-radius: 100px; font-weight: 600; transition: all 0.3s; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,245,212,0.3); }
+        .btn-secondary { padding: 16px 32px; border: 1px solid rgba(255,255,255,0.2); color: var(--text-primary); text-decoration: none; border-radius: 100px; transition: all 0.3s; }
+        .btn-secondary:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+        .nodes-section { padding: 120px 48px; position: relative; z-index: 10; }
+        .section-header { text-align: center; margin-bottom: 80px; }
+        .section-header h2 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 300; margin-bottom: 16px; }
+        .section-header p { color: var(--text-secondary); font-size: 1.1rem; }
+        .nodes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1200px; margin: 0 auto; }
+        .interactive-node { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 40px; position: relative; overflow: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
+        .interactive-node::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent); opacity: 0; transition: opacity 0.3s; }
+        .interactive-node:hover { transform: translateY(-8px); border-color: rgba(0,245,212,0.3); box-shadow: 0 20px 60px rgba(0,245,212,0.1); }
+        .interactive-node:hover::before { opacity: 1; }
+        .node-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 24px; background: rgba(0,245,212,0.1); border: 1px solid rgba(0,245,212,0.2); }
+        .interactive-node h3 { font-size: 1.3rem; margin-bottom: 12px; }
+        .interactive-node p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
+        .node-stats { display: flex; gap: 24px; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .node-stat-value { font-size: 1.5rem; font-weight: 600; color: var(--neon-cyan); }
+        .node-stat-label { color: var(--text-secondary); font-size: 0.8rem; }
+        .discovery-section { padding: 120px 48px; position: relative; z-index: 10; }
+        .discovery-container { max-width: 1000px; margin: 0 auto; }
+        .discovery-item { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; margin-bottom: 120px; opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .discovery-item.visible { opacity: 1; transform: translateY(0); }
+        .discovery-item:nth-child(even) { direction: rtl; }
+        .discovery-item:nth-child(even) > * { direction: ltr; }
+        .discovery-visual { position: relative; aspect-ratio: 1; border-radius: 24px; overflow: hidden; background: var(--card-bg); border: 1px solid rgba(255,255,255,0.08); }
+        .discovery-content h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--neon-cyan); margin-bottom: 16px; }
+        .discovery-content h4 { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 300; margin-bottom: 20px; line-height: 1.3; }
+        .discovery-content p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.7; margin-bottom: 24px; }
+        .discovery-link { display: inline-flex; align-items: center; gap: 8px; color: var(--neon-cyan); text-decoration: none; font-weight: 500; transition: gap 0.3s; }
+        .discovery-link:hover { gap: 16px; }
+        .stats-holo { padding: 80px 48px; position: relative; z-index: 10; }
+        .stats-holo::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,245,212,0.05) 0%, transparent 70%); pointer-events: none; }
+        .stats-grid { display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; position: relative; z-index: 1; }
+        .holo-stat { text-align: center; position: relative; }
+        .holo-stat::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; background: radial-gradient(circle, rgba(0,245,212,0.1) 0%, transparent 70%); border-radius: 50%; animation: holo-pulse 3s ease-in-out infinite; }
+        @keyframes holo-pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; } }
+        .holo-number { font-size: 4rem; font-weight: 700; background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
+        .holo-label { font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 12px; }
+        .footer-living { padding: 80px 48px; border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 10; text-align: center; }
+        .footer-cta { font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 300; margin-bottom: 40px; }
+        .footer-cta strong { color: var(--neon-cyan); }
+        .footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 40px; }
+        .footer-link { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
+        .footer-link:hover { color: var(--neon-cyan); }
+        .konami-lobster { position: fixed; font-size: 100px; pointer-events: none; z-index: 9999; animation: konami-fly 3s ease-out forwards; display: none; }
+        @keyframes konami-fly { 0% { transform: translate(-100px, 100vh) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(calc(100vw + 100px), -100px) rotate(720deg); opacity: 0; } }
+        @media (max-width: 900px) { .nodes-grid { grid-template-columns: 1fr; } .discovery-item { grid-template-columns: 1fr; direction: ltr !important; } .discovery-item > * { direction: ltr !important; } .nav-links { display: none; } body { cursor: auto; } .cursor, .cursor-follower { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    <canvas id="neural-canvas"></canvas>
+
+    <div class="terminal-overlay" id="terminal">
+        <div class="terminal-header"><div class="terminal-dot"></div><span>padraig@openclaw.ie</span></div>
+        <div class="terminal-content" id="terminalContent">
+            <span class="highlight">System:</span> Neural network initialized.<br>
+            <span class="highlight">Status:</span> Community growing... <span id="nodeCount">47</span> nodes connected.
+        </div>
+        <div class="terminal-input-line"><span class="terminal-prompt">$</span><input type="text" class="terminal-input" id="terminalInput" placeholder="Try: help, events, join, secret..." autocomplete="off"></div>
+    </div>
+
+    <nav class="nav-living">
+        <a href="#" class="logo-living">OpenClaw Ireland</a>
+        <div class="nav-links">
+            <a href="#explore" class="nav-node">Explore</a>
+            <a href="#discover" class="nav-node">Discover</a>
+            <a href="#connect" class="nav-node">Connect</a>
+        </div>
+    </nav>
+
+    <section class="hero-living">
+        <div class="hero-badge">Network Status: Active</div>
+        <h1>Intelligence is<br><strong>better connected</strong></h1>
+        <p class="hero-subtitle">A living network of AI builders in Ireland. We're not just building agents—we're cultivating the ecosystem where they thrive.</p>
+        <div class="hero-cta-group">
+            <a href="#explore" class="btn-primary">Enter the Network</a>
+            <a href="#discover" class="btn-secondary">Explore Events</a>
+        </div>
+    </section>
+
+    <section class="nodes-section" id="explore">
+        <div class="section-header">
+            <h2>Three Core Nodes</h2>
+            <p>Hover to activate. Click to explore.</p>
+        </div>
+        <div class="nodes-grid">
+            <div class="interactive-node" data-node="learn">
+                <div class="node-icon">🧠</div>
+                <h3>Learn</h3>
+                <p>Workshops and knowledge sharing from builders who've shipped. Real talk, real code, real growth.</p>
+                <div class="node-stats"><div class="node-stat"><div class="node-stat-value" data-count="12">0</div><div class="node-stat-label">Workshops</div></div><div class="node-stat"><div class="node-stat-value" data-count="340">0</div><div class="node-stat-label">Attendees</div></div></div>
+            </div>
+            <div class="interactive-node" data-node="build">
+                <div class="node-icon">⚡</div>
+                <h3>Build</h3>
+                <p>Hackathons where things get made. Bring your laptop, your ideas, and your stubbornness. We'll bring coffee.</p>
+                <div class="node-stats"><div class="node-stat"><div class="node-stat-value" data-count="4">0</div><div class="node-stat-label">Hackathons</div></div><div class="node-stat"><div class="node-stat-value" data-count="28">0</div><div class="node-stat-label">Projects</div></div></div>
+            </div>
+            <div class="interactive-node" data-node="connect">
+                <div class="node-icon">🌐</div>
+                <h3>Connect</h3>
+                <p>Meet your fellow agents. Regular meetups at Dogpatch Labs and beyond. Find your co-founder, mentor, or friend.</p>
+                <div class="node-stats"><div class="node-stat"><div class="node-stat-value" data-count="156">0</div><div class="node-stat-label">Members</div></div><div class="node-stat"><div class="node-stat-value" data-count="24">0</div><div class="node-stat-label">Meetups</div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="discovery-section" id="discover">
+        <div class="discovery-container">
+            <div class="discovery-item">
+                <div class="discovery-visual"><canvas id="canvas-launch" style="width:100%;height:100%"></canvas></div>
+                <div class="discovery-content">
+                    <h3>Next Event</h3>
+                    <h4>Launch Night — March 25</h4>
+                    <p>Our coming-out party at Dogpatch Labs. Demos that might break, talks that will inspire, and the finest tech chat this side of the Liffey.</p>
+                    <a href="#" class="discovery-link">Reserve your spot →</a>
+                </div>
+            </div>
+            <div class="discovery-item">
+                <div class="discovery-visual"><canvas id="canvas-workshop" style="width:100%;height:100%"></canvas></div>
+                <div class="discovery-content">
+                    <h3>Workshop</h3>
+                    <h4>Build Your First Agent</h4>
+                    <p>April 12 — Hands-on for beginners. You'll leave with working code and a new obsession. Bring your laptop, leave with superpowers.</p>
+                    <a href="#" class="discovery-link">Get tickets →</a>
+                </div>
+            </div>
+            <div class="discovery-item">
+                <div class="discovery-visual"><canvas id="canvas-hackathon" style="width:100%;height:100%"></canvas></div>
+                <div class="discovery-content">
+                    <h3>Summer 2026</h3>
+                    <h4>The Big One — 48 Hour Hackathon</h4>
+                    <p>Real prizes. Real demos. Real pressure. The goal: build something that survives the weekend. The best part? You won't be doing it alone.</p>
+                    <a href="#" class="discovery-link">Get notified →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-holo">
+        <div class="stats-grid">
+            <div class="holo-stat"><div class="holo-number" data-target="156">0</div><div class="holo-label">Active Nodes</div></div>
+            <div class="holo-stat"><div class="holo-number" data-target="12">0</div><div class="holo-label">Events Hosted</div></div>
+            <div class="holo-stat"><div class="holo-number" data-target="28">0</div><div class="holo-label">Projects Shipped</div></div>
+            <div class="holo-stat"><div class="holo-number" data-target="∞">∞</div><div class="holo-label">Possibilities</div></div>
+        </div>
+    </section>
+
+    <footer class="footer-living" id="connect">
+        <h3 class="footer-cta">Ready to join the <strong>network</strong>?</h3>
+        <div class="footer-links">
+            <a href="mailto:padraig@openclaw.ie" class="footer-link">Email</a>
+            <a href="#" class="footer-link">Twitter</a>
+            <a href="#" class="footer-link">Discord</a>
+            <a href="#" class="footer-link">GitHub</a>
+        </div>
+        <p class="footer-copy">© 2026 OpenClaw Ireland • Cultivated in Dublin</p>
+    </footer>
+
+    <div class="konami-lobster" id="konamiLobster">🦞</div>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0, followerX = 0, followerY = 0;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.2; cursorY += (mouseY - cursorY) * 0.2;
+            followerX += (mouseX - followerX) * 0.1; followerY += (mouseY - followerY) * 0.1;
+            cursor.style.left = cursorX - 10 + 'px'; cursor.style.top = cursorY - 10 + 'px';
+            cursorFollower.style.left = followerX - 20 + 'px'; cursorFollower.style.top = followerY - 20 + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        document.querySelectorAll('a, button, .interactive-node').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Neural Network Background
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [], mouse = { x: null, y: null };
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+        class Particle {
+            constructor() { this.x = Math.random() * width; this.y = Math.random() * height; this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5; this.size = Math.random() * 2 + 1; this.color = Math.random() > 0.5 ? '#00f5d4' : '#c77dff'; }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+                if (mouse.x != null) {
+                    const dx = mouse.x - this.x, dy = mouse.y - this.y, dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) { const force = (150 - dist) / 150; this.vx -= (dx / dist) * force * 0.5; this.vy -= (dy / dist) * force * 0.5; }
+                }
+            }
+            draw() { ctx.fillStyle = this.color; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        }
+        for (let i = 0; i < 80; i++) particles.push(new Particle());
+        document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        function animateNetwork() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach((p1, i) => {
+                p1.update(); p1.draw();
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x, dy = p1.y - p2.y, dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) { ctx.strokeStyle = '#00f5d4'; ctx.globalAlpha = (1 - dist / 150) * 0.2; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); }
+                });
+            });
+            requestAnimationFrame(animateNetwork);
+        }
+        animateNetwork();
+
+        // Terminal
+        const terminal = document.getElementById('terminal');
+        const terminalInput = document.getElementById('terminalInput');
+        const terminalContent = document.getElementById('terminalContent');
+        setTimeout(() => terminal.classList.add('active'), 2000);
+        const commands = {
+            help: () => `Available commands:<br><span class="highlight">events</span> - Show upcoming events<br><span class="highlight">join</span> - How to get involved<br><span class="highlight">clear</span> - Clear terminal<br><span class="highlight">secret</span> - ?`,
+            events: () => `Upcoming:<br>• March 25 — Launch Night @ Dogpatch Labs<br>• April 12 — Build Your First Agent workshop<br>• Summer 2026 — 48hr Hackathon`,
+            join: () => `Join the network:<br>Email: padraig@openclaw.ie<br>Twitter: @OpenClawIE<br>Discord: discord.gg/openclaw-ie`,
+            secret: () => { document.getElementById('konamiLobster').style.display = 'block'; setTimeout(() => document.getElementById('konamiLobster').style.display = 'none', 3000); return '🦞 The lobster has been summoned...'; },
+            clear: () => { terminalContent.innerHTML = ''; return ''; }
+        };
+        terminalInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = terminalInput.value.toLowerCase().trim();
+                terminalInput.value = '';
+                if (commands[cmd]) {
+                    const result = commands[cmd]();
+                    if (result) terminalContent.innerHTML += '<br><br><span class="highlight">$ ' + cmd + '</span><br>' + result;
+                } else {
+                    terminalContent.innerHTML += '<br><br><span class="highlight">$ ' + cmd + '</span><br>Command not found. Try: help';
+                }
+                terminalContent.scrollTop = terminalContent.scrollHeight;
+            }
+        });
+
+        // Animated Counters
+        function animateCounter(el, target) {
+            const duration = 2000;
+            const start = performance.now();
+            const startVal = parseInt(el.textContent) || 0;
+            function update(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.floor(startVal + (target - startVal) * ease);
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        // Intersection Observer for scroll animations
+        const observerOptions = { threshold: 0.2, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    entry.target.querySelectorAll('[data-count]').forEach(el => {
+                        const target = parseInt(el.dataset.count);
+                        animateCounter(el, target);
+                    });
+                    entry.target.querySelectorAll('[data-target]').forEach(el => {
+                        const target = el.dataset.target;
+                        if (target !== '∞') animateCounter(el, parseInt(target));
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.discovery-item, .nodes-section, .stats-holo').forEach(el => observer.observe(el));
+
+        // Event canvases - animated mini visualizations
+        function createWaveCanvas(canvasId, color) {
+            const c = document.getElementById(canvasId);
+            if (!c) return;
+            const x = c.getContext('2d');
+            let w, h, time = 0;
+            function resize() { w = c.width = c.offsetWidth; h = c.height = c.offsetHeight; }
+            window.addEventListener('resize', resize); resize();
+            function draw() {
+                x.fillStyle = '#0a0a0f'; x.fillRect(0, 0, w, h);
+                x.strokeStyle = color; x.lineWidth = 2;
+                for (let i = 0; i < 3; i++) {
+                    x.beginPath();
+                    for (let px = 0; px < w; px++) {
+                        const y = h/2 + Math.sin((px + time * (50 + i * 20)) * 0.02) * 30 * (i + 1) * 0.5;
+                        if (px === 0) x.moveTo(px, y); else x.lineTo(px, y);
+                    }
+                    x.globalAlpha = 0.3 - i * 0.1; x.stroke();
+                }
+                time++;
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        createWaveCanvas('canvas-launch', '#00f5d4');
+        createWaveCanvas('canvas-workshop', '#c77dff');
+        createWaveCanvas('canvas-hackathon', '#ff006e');
+
+        // Konami code easter egg
+        let konami = [];
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        document.addEventListener('keydown', (e) => {
+            konami.push(e.key);
+            konami = konami.slice(-10);
+            if (konami.join(',') === konamiCode.join(',')) {
+                document.getElementById('konamiLobster').style.display = 'block';
+                setTimeout(() => document.getElementById('konamiLobster').style.display = 'none', 3000);
+            }
+        });
+
+        // Increment node count randomly
+        setInterval(() => {
+            const count = document.getElementById('nodeCount');
+            if (count && Math.random() > 0.7) {
+                count.textContent = parseInt(count.textContent) + 1;
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
