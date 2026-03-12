@@ -423,13 +423,21 @@
             grid-template-columns: 1fr 1fr;
             gap: 24px;
             margin-top: 24px;
-            align-items: stretch;
+            align-items: start;
         }
         .room-info {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(0, 212, 170, 0.1);
             border-radius: 8px;
-            padding: 24px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .room-info .room-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
         .activity-feed {
             background: rgba(255, 255, 255, 0.02);
@@ -727,7 +735,7 @@
                     <div class="activity-feed-title">Recent Activity</div>
                     <div class="activity-feed-content" id="activityFeedContent">
                         <div class="activity-item">
-                            <div class="activity-text">Loading history...</div>
+                            <div class="activity-text">Waiting for activity...</div>
                         </div>
                     </div>
                     <div class="activity-legend">
@@ -940,28 +948,51 @@ function updateUI() {
 
   // Update activity feed
   const feedContent = document.getElementById('activityFeedContent');
-  if (feedContent && serverState.history && serverState.history.length > 0) {
+  if (feedContent) {
     const stateNames = {
       working: 'Worked',
       coffee: 'Coffee break',
       sleeping: 'Napped'
     };
-    feedContent.innerHTML = serverState.history.map(item => {
-      const stateName = stateNames[item.state] || item.state;
-      const duration = formatDuration(item.duration);
-      const timeAgo = formatTimeAgo(item.endedAt);
-      return `
-        <div class="activity-item">
+    
+    let html = '';
+    
+    // Add current activity at the top
+    if (serverState.lastActive) {
+      const currentStateName = stateNames[currentState] || currentState;
+      const currentDuration = formatTimeAgo(serverState.lastActive);
+      html += `
+        <div class="activity-item" style="opacity: 0.8;">
           <div class="activity-text">
-            <span class="activity-dot ${item.state}"></span>
-            ${stateName} for ${duration}
+            <span class="activity-dot ${currentState}"></span>
+            Currently ${currentStateName.toLowerCase()}
           </div>
-          <div class="activity-time">${timeAgo}</div>
+          <div class="activity-time">Since ${currentDuration.replace(' ago', '')}</div>
         </div>
       `;
-    }).join('');
-  } else if (feedContent) {
-    feedContent.innerHTML = '<div class="activity-item"><div class="activity-text">No activity yet</div></div>';
+    }
+    
+    // Add history
+    if (serverState.history && serverState.history.length > 0) {
+      html += serverState.history.map(item => {
+        const stateName = stateNames[item.state] || item.state;
+        const duration = formatDuration(item.duration);
+        const timeAgo = formatTimeAgo(item.endedAt);
+        return `
+          <div class="activity-item">
+            <div class="activity-text">
+              <span class="activity-dot ${item.state}"></span>
+              ${stateName} for ${duration}
+            </div>
+            <div class="activity-time">${timeAgo}</div>
+          </div>
+        `;
+      }).join('');
+    } else if (!serverState.lastActive) {
+      html = '<div class="activity-item"><div class="activity-text">No activity recorded yet</div></div>';
+    }
+    
+    feedContent.innerHTML = html;
   }
 }
 
