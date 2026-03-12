@@ -187,8 +187,8 @@
             gap: 16px;
             padding: 20px 40px;
             background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
+            border: 1px solid #ffffff;
+            color: #ffffff;
             text-decoration: none;
             font-size: 0.8rem;
             text-transform: uppercase;
@@ -204,7 +204,7 @@
             position: absolute;
             top: 0; left: -100%;
             width: 100%; height: 100%;
-            background: var(--accent);
+            background: #ffffff;
             transition: left 0.3s;
             z-index: -1;
         }
@@ -255,7 +255,7 @@
             font-size: 0.6rem;
             letter-spacing: 0.3em;
             text-transform: uppercase;
-            color: var(--accent);
+            color: #ffffff;
             margin-bottom: 80px;
             display: flex;
             align-items: center;
@@ -279,7 +279,7 @@
             color: var(--text);
         }
         .reveal-text strong {
-            color: var(--accent);
+            color: #e94b4a;
             font-weight: 500;
         }
         .room-section {
@@ -305,7 +305,7 @@
             font-size: 0.6rem;
             letter-spacing: 0.3em;
             text-transform: uppercase;
-            color: var(--accent);
+            color: #ffffff;
             margin-bottom: 40px;
             display: flex;
             align-items: center;
@@ -321,7 +321,7 @@
         .room-status {
             font-size: 0.9rem;
             font-weight: 600;
-            color: var(--accent);
+            color: #ffffff;
             text-transform: uppercase;
             letter-spacing: 0.15em;
             margin-bottom: 24px;
@@ -333,12 +333,12 @@
         .status-dot {
             width: 12px; height: 12px;
             border-radius: 50%;
-            background: var(--accent);
+            background: #00ff00;
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.6); }
-            50% { opacity: 0.6; box-shadow: 0 0 0 12px rgba(255, 77, 77, 0); }
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.6); }
+            50% { opacity: 0.6; box-shadow: 0 0 0 12px rgba(0, 255, 0, 0); }
         }
         .room-canvas-container {
             position: relative;
@@ -382,7 +382,7 @@
         .room-stat-value {
             font-family: 'Syncopate', sans-serif;
             font-size: 0.85rem;
-            color: var(--accent);
+            color: var(--text);
         }
         .room-legend {
             margin-top: 32px;
@@ -1269,7 +1269,7 @@ function drawCharacter(x, y, state, walkFrame) {
   const bounce = isWalking ? Math.sin(walkFrame * 0.5) * 3 : 0;
   
   if (state === 'sleeping') {
-    drawRect(x - 20, y + 10, 40, 15, '#FF4D4D');
+    drawRect(x - 20, y + 10, 40, 15, '#4a90e2');
     drawCircle(x - 25, y + 17, 10, '#ffdbac');
     const zOffset = (Date.now() / 1000) % 3;
     ctx.fillStyle = `rgba(255, 255, 255, ${0.5 - zOffset/6})`;
@@ -1279,7 +1279,7 @@ function drawCharacter(x, y, state, walkFrame) {
     if (zOffset > 2) ctx.fillText('Z', x - 25, y - (zOffset - 2) * 5);
   } else {
     const yPos = y + bounce;
-    drawRect(x - 10, yPos, 20, 25, '#FF4D4D');
+    drawRect(x - 10, yPos, 20, 25, '#4a90e2');
     drawCircle(x, yPos - 8, 10, '#ffdbac');
     ctx.fillStyle = '#000000';
     ctx.fillRect(x - 4, yPos - 10, 2, 2);
