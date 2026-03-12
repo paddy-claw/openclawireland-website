@@ -842,6 +842,7 @@ const sessionTime = document.getElementById('sessionTime');
 let currentState = 'sleeping';
 let serverState = null;
 let lastFetch = 0;
+let currentWeather = 'clear'; // clear, rain, cloudy, snow
 
 // Animation state
 let characterPos = { x: 110, y: 300 };
@@ -902,8 +903,21 @@ async function fetchWeather() {
     const weather = await response.text();
     const weatherEl = document.getElementById('weatherValue');
     if (weatherEl) weatherEl.textContent = weather.trim();
+    
+    // Parse weather condition for canvas
+    const weatherLower = weather.toLowerCase();
+    if (weatherLower.includes('rain') || weatherLower.includes('🌧️') || weatherLower.includes('🌦️')) {
+      currentWeather = 'rain';
+    } else if (weatherLower.includes('cloud') || weatherLower.includes('☁️') || weatherLower.includes('⛅') || weatherLower.includes('🌥️')) {
+      currentWeather = 'cloudy';
+    } else if (weatherLower.includes('snow') || weatherLower.includes('❄️') || weatherLower.includes('🌨️')) {
+      currentWeather = 'snow';
+    } else {
+      currentWeather = 'clear';
+    }
   } catch (err) {
     console.log('Weather fetch failed:', err);
+    currentWeather = 'clear';
   }
 }
 
@@ -965,18 +979,80 @@ function drawCircle(x, y, r, color) {
 }
 
 function drawWindow(x, y, w, h, lightLevel) {
+  // Window frame
   drawRect(x, y, w, h, '#1a1a2e');
-  const skyColor = lightLevel > 0.5 ? '#87CEEB' : '#0a0a20';
-  const moonSunColor = lightLevel > 0.5 ? '#FFD700' : '#F0F0F0';
-  drawRect(x + 5, y + 5, w - 10, h - 10, skyColor);
-  if (lightLevel > 0.5) {
-    drawCircle(x + w - 30, y + 30, 15, moonSunColor);
+  
+  // Determine sky color based on time and weather
+  let skyColor;
+  const isDay = lightLevel > 0.5;
+  
+  if (isDay) {
+    if (currentWeather === 'rain') skyColor = '#4a5568';
+    else if (currentWeather === 'cloudy') skyColor = '#718096';
+    else if (currentWeather === 'snow') skyColor = '#a0aec0';
+    else skyColor = '#87CEEB'; // clear day
   } else {
-    drawCircle(x + w - 30, y + 30, 12, moonSunColor);
-    drawCircle(x + w - 35, y + 25, 3, '#0a0a20');
+    skyColor = '#0a0a20'; // night
   }
+  
+  drawRect(x + 5, y + 5, w - 10, h - 10, skyColor);
+  
+  // Sun/Moon
+  const moonSunColor = isDay ? '#FFD700' : '#F0F0F0';
+  if (isDay && currentWeather !== 'rain' && currentWeather !== 'cloudy') {
+    // Sun with rays
+    drawCircle(x + w - 50, y + 50, 25, moonSunColor);
+    // Sun rays
+    ctx.strokeStyle = moonSunColor;
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 8; i++) {
+      const angle = (i * Math.PI) / 4;
+      ctx.beginPath();
+      ctx.moveTo(x + w - 50 + Math.cos(angle) * 30, y + 50 + Math.sin(angle) * 30);
+      ctx.lineTo(x + w - 50 + Math.cos(angle) * 40, y + 50 + Math.sin(angle) * 40);
+      ctx.stroke();
+    }
+  } else if (!isDay) {
+    // Moon
+    drawCircle(x + w - 50, y + 50, 20, moonSunColor);
+    drawCircle(x + w - 60, y + 40, 5, '#0a0a20');
+  }
+  
+  // Clouds
+  if (currentWeather === 'cloudy' || currentWeather === 'rain') {
+    ctx.fillStyle = isDay ? '#e2e8f0' : '#4a5568';
+    drawCircle(x + 40, y + 50, 25, ctx.fillStyle);
+    drawCircle(x + 70, y + 40, 30, ctx.fillStyle);
+    drawCircle(x + 100, y + 50, 25, ctx.fillStyle);
+  }
+  
+  // Rain
+  if (currentWeather === 'rain') {
+    ctx.strokeStyle = '#63b3ed';
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 10; i++) {
+      const rx = x + 20 + (i * 15);
+      const ry = y + 80 + (Math.random() * 40);
+      ctx.beginPath();
+      ctx.moveTo(rx, ry);
+      ctx.lineTo(rx - 5, ry + 15);
+      ctx.stroke();
+    }
+  }
+  
+  // Snow
+  if (currentWeather === 'snow') {
+    ctx.fillStyle = '#ffffff';
+    for (let i = 0; i < 15; i++) {
+      const sx = x + 20 + Math.random() * (w - 40);
+      const sy = y + 30 + Math.random() * (h - 50);
+      drawCircle(sx, sy, 2 + Math.random() * 2, '#ffffff');
+    }
+  }
+  
+  // Window frame cross
   ctx.strokeStyle = '#2a2a3e';
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 4;
   ctx.beginPath();
   ctx.moveTo(x + w/2, y);
   ctx.lineTo(x + w/2, y + h);
@@ -1117,7 +1193,7 @@ function drawRoom() {
   ctx.strokeStyle = '#3a2a2a';
   ctx.lineWidth = 2;
   ctx.strokeRect(305, 365, 190, 70);
-  drawWindow(230, 50, 160, 110, windowLight);
+  drawWindow(200, 40, 240, 160, windowLight);
   drawBed(60, 260, 140, 100);
   drawDesk(450, 220, 160, 100);
   drawCoffeeMachine(680, 140, 70, 50);
