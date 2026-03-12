@@ -284,9 +284,39 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-// Poll status every 30 seconds
-fetchStatus();
-setInterval(fetchStatus, 30000);
+// Poll status every 15 seconds (only when visible)
+const POLL_INTERVAL = 15000;
+let pollIntervalId = null;
+let isVisible = true;
+
+function startPolling() {
+  if (pollIntervalId) return;
+  fetchStatus(); // Fetch immediately
+  pollIntervalId = setInterval(fetchStatus, POLL_INTERVAL);
+}
+
+function stopPolling() {
+  if (pollIntervalId) {
+    clearInterval(pollIntervalId);
+    pollIntervalId = null;
+  }
+}
+
+// Handle page visibility
+if (document.hidden !== undefined) {
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopPolling();
+    } else {
+      startPolling();
+    }
+  });
+}
+
+// Start if visible
+if (!document.hidden) {
+  startPolling();
+}
 
 // Start animation
 animate();
