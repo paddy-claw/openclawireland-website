@@ -755,7 +755,7 @@ const STATE_POSITIONS = {
 // Fetch status from Vercel API
 async function fetchStatus() {
   try {
-    const response = await fetch('/api/status');
+    const response = await fetch('/api/room');
     if (!response.ok) throw new Error('Failed to fetch');
     serverState = await response.json();
     lastFetch = Date.now();
