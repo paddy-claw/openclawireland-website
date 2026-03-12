@@ -14,8 +14,8 @@
             --deep: #050508;
             --mid: #0f0f1a;
             --light: #1a1a2e;
-            --accent: #00d4aa;
-            --accent-glow: rgba(0, 212, 170, 0.3);
+            --accent: #FF4D4D;
+            --accent-glow: rgba(255, 77, 77, 0.3);
             --text: #e0e0e0;
             --text-dim: #888;
         }
@@ -109,7 +109,7 @@
         }
         .bg-layer-1 {
             background: 
-                radial-gradient(ellipse 80% 50% at 50% 120%, rgba(0, 212, 170, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 50% at 50% 120%, rgba(255, 77, 77, 0.15) 0%, transparent 60%),
                 radial-gradient(ellipse 60% 40% at 20% 50%, rgba(124, 96, 255, 0.1) 0%, transparent 50%);
         }
         .bg-layer-2 {
@@ -126,8 +126,8 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             background-image: 
-                linear-gradient(rgba(0, 212, 170, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 212, 170, 0.03) 1px, transparent 1px);
+                linear-gradient(rgba(255, 77, 77, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 77, 77, 0.03) 1px, transparent 1px);
             background-size: 100px 100px;
             transform: perspective(500px) rotateX(60deg) translateY(-100px) scale(2);
             transform-origin: top;
@@ -337,8 +337,8 @@
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.6); }
-            50% { opacity: 0.6; box-shadow: 0 0 0 12px rgba(0, 212, 170, 0); }
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.6); }
+            50% { opacity: 0.6; box-shadow: 0 0 0 12px rgba(255, 77, 77, 0); }
         }
         .room-canvas-container {
             position: relative;
@@ -348,9 +348,9 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 
-                0 0 0 1px rgba(0, 212, 170, 0.2),
+                0 0 0 1px rgba(255, 77, 77, 0.2),
                 0 20px 60px rgba(0, 0, 0, 0.5),
-                0 0 100px rgba(0, 212, 170, 0.05);
+                0 0 100px rgba(255, 77, 77, 0.05);
         }
         #roomCanvas {
             display: block;
@@ -365,7 +365,7 @@
             margin-top: 40px;
             padding: 24px;
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(0, 212, 170, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.1);
             border-radius: 8px;
         }
         .room-stat {
@@ -403,7 +403,7 @@
             border-radius: 2px;
         }
         .legend-dot.sleeping { background: #7c60ff; }
-        .legend-dot.working { background: #00d4aa; }
+        .legend-dot.working { background: #FF4D4D; }
         .legend-dot.coffee { background: #ff8c42; }
         .room-layout {
             display: flex;
@@ -423,11 +423,18 @@
             grid-template-columns: 1fr 1fr;
             gap: 24px;
             margin-top: 24px;
-            align-items: start;
+            align-items: stretch;
+        }
+        .room-info, .activity-feed {
+            display: flex;
+            flex-direction: column;
+        }
+        .room-info {
+            justify-content: space-between;
         }
         .room-info {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(0, 212, 170, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.1);
             border-radius: 8px;
             padding: 20px;
             display: flex;
@@ -441,7 +448,7 @@
         }
         .activity-feed {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(0, 212, 170, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.1);
             border-radius: 8px;
             padding: 20px;
             display: flex;
@@ -455,7 +462,7 @@
         .activity-legend {
             margin-top: 16px;
             padding-top: 12px;
-            border-top: 1px solid rgba(0, 212, 170, 0.1);
+            border-top: 1px solid rgba(255, 77, 77, 0.1);
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
@@ -470,7 +477,7 @@
             color: var(--accent);
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 1px solid rgba(0, 212, 170, 0.2);
+            border-bottom: 1px solid rgba(255, 77, 77, 0.2);
         }
         .activity-item {
             display: flex;
@@ -499,7 +506,7 @@
             display: inline-block;
             margin-right: 8px;
         }
-        .activity-dot.working { background: #00d4aa; }
+        .activity-dot.working { background: #FF4D4D; }
         .activity-dot.coffee { background: #ff8c42; }
         .activity-dot.sleeping { background: #7c60ff; }
         .cards-immersive {
@@ -1112,9 +1119,9 @@ function drawDesk(x, y, w, h) {
   drawRect(x + 55, y - 10, 10, 10, '#2a2a3e');
   
   if (monitorGlow > 0) {
-    ctx.fillStyle = `rgba(0, 212, 170, ${monitorGlow * 0.3})`;
+    ctx.fillStyle = `rgba(255, 77, 77, ${monitorGlow * 0.3})`;
     ctx.fillRect(x + 35, y - 35, 50, 30);
-    ctx.fillStyle = `rgba(0, 212, 170, ${monitorGlow})`;
+    ctx.fillStyle = `rgba(255, 77, 77, ${monitorGlow})`;
     ctx.fillRect(x + 40, y - 30, 20, 2);
     ctx.fillRect(x + 40, y - 25, 35, 2);
     ctx.fillRect(x + 40, y - 20, 25, 2);
@@ -1130,7 +1137,7 @@ function drawCoffeeMachine(x, y, w, h) {
   drawRect(x, y, w, h, '#2a2a3e');
   drawRect(x + 5, y + 5, w - 10, h - 10, '#1a1a2e');
   drawRect(x + 10, y + 10, w - 20, 15, '#0a0a12');
-  ctx.fillStyle = '#00d4aa';
+  ctx.fillStyle = '#FF4D4D';
   ctx.font = '10px monospace';
   ctx.fillText('READY', x + 15, y + 22);
   drawRect(x + 15, y + 35, 15, 12, '#ffffff');
@@ -1165,7 +1172,7 @@ function drawCharacter(x, y, state, walkFrame) {
   const bounce = isWalking ? Math.sin(walkFrame * 0.5) * 3 : 0;
   
   if (state === 'sleeping') {
-    drawRect(x - 20, y + 10, 40, 15, '#00d4aa');
+    drawRect(x - 20, y + 10, 40, 15, '#FF4D4D');
     drawCircle(x - 25, y + 17, 10, '#ffdbac');
     const zOffset = (Date.now() / 1000) % 3;
     ctx.fillStyle = `rgba(255, 255, 255, ${0.5 - zOffset/6})`;
@@ -1175,7 +1182,7 @@ function drawCharacter(x, y, state, walkFrame) {
     if (zOffset > 2) ctx.fillText('Z', x - 25, y - (zOffset - 2) * 5);
   } else {
     const yPos = y + bounce;
-    drawRect(x - 10, yPos, 20, 25, '#00d4aa');
+    drawRect(x - 10, yPos, 20, 25, '#FF4D4D');
     drawCircle(x, yPos - 8, 10, '#ffdbac');
     ctx.fillStyle = '#000000';
     ctx.fillRect(x - 4, yPos - 10, 2, 2);
@@ -1234,7 +1241,7 @@ function drawRoom() {
   
   ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
   ctx.fillRect(10, 10, 150, 30);
-  ctx.fillStyle = currentState === 'sleeping' ? '#7c60ff' : currentState === 'working' ? '#00d4aa' : '#ff8c42';
+  ctx.fillStyle = currentState === 'sleeping' ? '#7c60ff' : currentState === 'working' ? '#FF4D4D' : '#ff8c42';
   ctx.font = '12px monospace';
   ctx.fillText('● ' + currentState.toUpperCase(), 20, 30);
 }
