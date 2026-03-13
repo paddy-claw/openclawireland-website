@@ -5,15 +5,7 @@
       "src": "/api/room",
       "dest": "/api/room.js"
     },
-    {
-      "src": "/api/activity",
-      "dest": "/api/activity.js"
-    },
-    {
-      "src": "/api/status",
-      "dest": "/api/status.js"
-    },
-    {
+{
       "src": "/api/health",
       "dest": "/api/health.js"
     },

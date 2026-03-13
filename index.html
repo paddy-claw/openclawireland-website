@@ -720,122 +720,11 @@
             color: var(--text-dim);
             font-size: 1rem;
         }
-        .newsletter-container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        .newsletter-title {
-            font-family: 'Syncopate', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            margin-bottom: 16px;
-        }
-        .newsletter-desc {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-            margin-bottom: 40px;
-        }
-        .newsletter-form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        .newsletter-inputs {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .newsletter-input {
-            flex: 1;
-            min-width: 250px;
-            padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 77, 77, 0.3);
-            border-radius: 4px;
-            color: var(--text);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        .newsletter-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .newsletter-input::placeholder {
-            color: var(--text-dim);
-        }
-        .newsletter-input-name {
-            flex: 0.5;
-            min-width: 150px;
-        }
-        .newsletter-submit {
-            padding: 16px 32px;
-            background: var(--accent);
-            border: none;
-            border-radius: 4px;
-            color: #fff;
-            font-family: 'Syncopate', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .newsletter-submit:hover {
-            background: #ff6666;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 77, 77, 0.3);
-        }
-        .newsletter-submit:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .newsletter-privacy {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin-top: 8px;
-        }
-        .newsletter-message {
-            margin-top: 16px;
-            padding: 12px 20px;
-            border-radius: 4px;
-            font-size: 0.95rem;
-            display: none;
-        }
-        .newsletter-message.success {
-            display: block;
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            color: #22c55e;
-        }
-        .newsletter-message.error {
-            display: block;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-        }
         @media (max-width: 480px) {
             .room-info {
                 grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
                 gap: 16px;
                 padding: 16px;
-            }
-        }
-        @media (max-width: 600px) {
-            .newsletter-inputs {
-                flex-direction: column;
-            }
-            .newsletter-input, .newsletter-input-name {
-                min-width: 100%;
             }
         }
         footer {
@@ -1076,22 +965,7 @@
     <section class="reveal-section" id="newsletter">
         <div class="reveal-content">
             <div class="section-label">005 — Stay Updated</div>
-            <div class="newsletter-container">
-                <h2 class="newsletter-title">Get event notifications</h2>
-                <p class="newsletter-desc">No spam. Just updates about meetups, hackathons, and workshops in Dublin.</p>
-                <form class="newsletter-form" id="newsletterForm">
-                    <div class="newsletter-inputs">
-                        <input type="email" id="newsletterEmail" placeholder="your@email.com" required class="newsletter-input">
-                        <input type="text" id="newsletterName" placeholder="Name (optional)" class="newsletter-input newsletter-input-name">
-                        <button type="submit" class="newsletter-submit">
-                            <span>Subscribe</span>
-                            <span id="submitArrow">→</span>
-                        </button>
-                    </div>
-                    <p class="newsletter-privacy">We respect your privacy. Unsubscribe anytime.</p>
-                    <div class="newsletter-message" id="newsletterMessage"></div>
-                </form>
-            </div>
+            <script async data-uid="c206771a9a" src="https://openclaw-ireland.kit.com/c206771a9a/index.js"></script>
         </div>
     </section>
 
@@ -1723,67 +1597,6 @@ setInterval(fetchWeather, WEATHER_INTERVAL);
 // Start animation
 animate();
 
-// ===== NEWSLETTER SIGNUP =====
-const newsletterForm = document.getElementById('newsletterForm');
-const newsletterEmail = document.getElementById('newsletterEmail');
-const newsletterName = document.getElementById('newsletterName');
-const newsletterMessage = document.getElementById('newsletterMessage');
-const submitArrow = document.getElementById('submitArrow');
-
-if (newsletterForm) {
-    newsletterForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const email = newsletterEmail.value.trim();
-        const name = newsletterName.value.trim();
-        
-        if (!email) {
-            showNewsletterMessage('Please enter your email address.', 'error');
-            return;
-        }
-        
-        // Disable form
-        const submitBtn = newsletterForm.querySelector('.newsletter-submit');
-        submitBtn.disabled = true;
-        submitArrow.textContent = '...';
-        
-        try {
-            const response = await fetch('/api/newsletter', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, name })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                showNewsletterMessage(data.message, 'success');
-                newsletterEmail.value = '';
-                newsletterName.value = '';
-            } else {
-                showNewsletterMessage(data.message || 'Something went wrong. Please try again.', 'error');
-            }
-        } catch (error) {
-            console.error('Newsletter signup error:', error);
-            showNewsletterMessage('Failed to connect. Please try again later.', 'error');
-        } finally {
-            submitBtn.disabled = false;
-            submitArrow.textContent = '→';
-        }
-    });
-}
-
-function showNewsletterMessage(message, type) {
-    newsletterMessage.textContent = message;
-    newsletterMessage.className = 'newsletter-message ' + type;
-    
-    // Clear after 5 seconds
-    setTimeout(() => {
-        newsletterMessage.className = 'newsletter-message';
-    }, 5000);
-}
     </script>
 </body>
 </html>
