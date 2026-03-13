@@ -1,0 +1,26 @@
+[
+  {
+    "state": "coffee",
+    "startedAt": 1773343839070,
+    "endedAt": 1773344512209,
+    "duration": 673139
+  },
+  {
+    "state": "sleeping",
+    "startedAt": 1773333242840,
+    "endedAt": 1773343839070,
+    "duration": 10596230
+  },
+  {
+    "state": "sleeping",
+    "startedAt": 1773288765438,
+    "endedAt": 1773333242840,
+    "duration": 44477402
+  },
+  {
+    "state": "sleeping",
+    "startedAt": 1773185119103,
+    "endedAt": 1773288765438,
+    "duration": 103646335
+  }
+]
