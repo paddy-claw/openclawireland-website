@@ -1060,18 +1060,12 @@ async function fetchStatus() {
     serverState = await response.json();
     lastFetch = Date.now();
 
-    // Parse state (ignore any embedded intensity, we'll calculate client-side)
+    // Parse combined state: "working,3" or "coffee" or "sleeping"
+    // Default to intensity 0 if not provided (as agreed)
     const rawState = serverState.state || 'sleeping';
-    const baseState = rawState.split(',')[0]; // Remove any ,N suffix
-
-    // Record activity and calculate client-side intensity
-    // We record whenever lastActive changes (new ping from watcher)
-    const lastActive = serverState.lastActive || 0;
-    const prevLastActive = window._lastRecordedActivity || 0;
-    if (lastActive !== prevLastActive) {
-      currentIntensity = recordActivity(lastActive);
-      window._lastRecordedActivity = lastActive;
-    }
+    const parts = rawState.split(',');
+    const baseState = parts[0];
+    currentIntensity = parts[1] ? parseInt(parts[1]) : 0; // Default 0
 
     // Initialize last state on first load
     if (!getLastState()) {
