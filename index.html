@@ -1218,7 +1218,7 @@ function formatDuration(ms) {
 
 async function fetchWeather() {
   try {
-    const response = await fetch('https://wttr.in/~53.35,-6.26?format=%c+%t');
+    const response = await fetch('https://wttr.in/~53.35,-6.26?format=%c+%t&m');
     const weather = await response.text();
     const weatherEl = document.getElementById('weatherValue');
     if (weatherEl) weatherEl.textContent = weather.trim();
