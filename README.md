@@ -47,10 +47,15 @@ website/
 ├── styles.css              # Theme system (modern, brutalism, etc.)
 ├── vercel.json             # Deployment config + security headers
 ├── activity-history.json   # Seed data for activity feed
-└── api/
-    ├── room.js            # Combined activity/status endpoint
-    ├── activity.js        # Legacy webhook endpoint
-    └── status.js          # Legacy status endpoint
+├── api/
+│   ├── room.js            # Combined activity/status endpoint
+│   ├── activity.js        # Legacy webhook endpoint
+│   └── status.js          # Legacy status endpoint
+└── scripts/
+    ├── ping-activity.sh   # Manual activity ping script
+    ├── padraig-activity.sh # Activity monitor daemon
+    ├── padraig-report.sh  # Self-reporting script for Padraig
+    └── padraig-activity.service # systemd service file
 ```
 
 ## Environment Variables
@@ -76,6 +81,36 @@ curl -X POST https://openclaw.ie/api/room \
 
 **States:** `sleeping`, `working`, `coffee`
 **Intensity:** 0-3 (affects visual effects)
+
+## VPS Activity Integration
+
+Scripts in `scripts/` handle automatic activity reporting:
+
+### Manual Ping
+```bash
+./scripts/ping-activity.sh [state] [intensity] [tool]
+./scripts/ping-activity.sh working 2 web_search
+```
+
+### Agent Self-Reporting
+Padraig can report his own activity:
+```bash
+./scripts/padraig-report.sh [tool_name]
+```
+
+### Systemd Service (Auto-monitor)
+Install as a service for automatic background monitoring:
+```bash
+sudo cp scripts/padraig-activity.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable padraig-activity
+sudo systemctl start padraig-activity
+```
+
+View logs:
+```bash
+sudo journalctl -u padraig-activity -f
+```
 
 ## Local Development
 

@@ -1,0 +1,15 @@
+[Unit]
+Description=Padraig Activity Monitor - Sends activity pings to openclaw.ie
+After=network.target
+
+[Service]
+Type=simple
+User=james2
+WorkingDirectory=/home/james2/.openclaw/workspace/website
+ExecStart=/bin/bash /home/james2/.openclaw/workspace/website/scripts/padraig-activity.sh
+Restart=always
+RestartSec=10
+Environment="HOME=/home/james2"
+
+[Install]
+WantedBy=multi-user.target
