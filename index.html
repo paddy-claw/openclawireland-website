@@ -425,10 +425,6 @@
             margin-top: 24px;
             align-items: stretch;
         }
-        .room-left {
-            display: flex;
-            flex-direction: column;
-        }
         .room-info, .activity-feed {
             display: flex;
             flex-direction: column;
@@ -461,56 +457,7 @@
         .activity-feed-content {
             flex: 1;
             overflow-y: auto;
-            max-height: 280px;
-        }
-        .intensity-meter {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 77, 77, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .intensity-meter-title {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--accent);
-        }
-        .intensity-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .intensity-step {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            opacity: 0.4;
-            transition: opacity 0.3s;
-        }
-        .intensity-step.active {
-            opacity: 1;
-            color: var(--text);
-        }
-        .intensity-step.active .intensity-dot {
-            background: var(--accent);
-            box-shadow: 0 0 10px var(--accent-glow);
-        }
-        .intensity-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
-        }
-        .intensity-step-label {
-            flex: 1;
+            max-height: 140px;
         }
         .activity-legend {
             margin-top: 16px;
@@ -777,45 +724,18 @@
                 </div>
             </div>
             <div class="room-bottom">
-                <div class="room-left">
-                    <div class="intensity-meter">
-                        <div class="intensity-meter-title">Work Intensity</div>
-                        <div class="intensity-steps">
-                            <div class="intensity-step" data-level="0">
-                                <div class="intensity-dot"></div>
-                                <span class="intensity-step-label">0 — Resting / Coffee</span>
-                            </div>
-                            <div class="intensity-step" data-level="1">
-                                <div class="intensity-dot"></div>
-                                <span class="intensity-step-label">1 — Light tasks</span>
-                            </div>
-                            <div class="intensity-step" data-level="2">
-                                <div class="intensity-dot"></div>
-                                <span class="intensity-step-label">2 — Active processing</span>
-                            </div>
-                            <div class="intensity-step" data-level="3">
-                                <div class="intensity-dot"></div>
-                                <span class="intensity-step-label">3 — Heavy workload</span>
-                            </div>
-                            <div class="intensity-step" data-level="4">
-                                <div class="intensity-dot"></div>
-                                <span class="intensity-step-label">4 — Maximum output</span>
-                            </div>
-                        </div>
+                <div class="room-info">
+                    <div class="room-stat">
+                        <span class="room-stat-label">Current Activity</span>
+                        <span class="room-stat-value" id="activityValue">Initializing...</span>
                     </div>
-                    <div class="room-info">
-                        <div class="room-stat">
-                            <span class="room-stat-label">Current Activity</span>
-                            <span class="room-stat-value" id="activityValue">Initializing...</span>
-                        </div>
-                        <div class="room-stat">
-                            <span class="room-stat-label">Time in Dublin</span>
-                            <span class="room-stat-value" id="dublinTime">--:--</span>
-                        </div>
-                        <div class="room-stat">
-                            <span class="room-stat-label">Weather</span>
-                            <span class="room-stat-value" id="weatherValue">Loading...</span>
-                        </div>
+                    <div class="room-stat">
+                        <span class="room-stat-label">Time in Dublin</span>
+                        <span class="room-stat-value" id="dublinTime">--:--</span>
+                    </div>
+                    <div class="room-stat">
+                        <span class="room-stat-label">Weather</span>
+                        <span class="room-stat-value" id="weatherValue">Loading...</span>
                     </div>
                 </div>
                 <div class="activity-feed" id="activityFeed">
@@ -1219,17 +1139,6 @@ function updateUI() {
   const label = stateLabels[currentState];
   activityValue.textContent = label.text;
   dublinTime.textContent = serverState.dublinTime;
-
-  // Update intensity meter
-  const intensitySteps = document.querySelectorAll('.intensity-step');
-  intensitySteps.forEach(step => {
-    const level = parseInt(step.dataset.level);
-    if (level === currentIntensity) {
-      step.classList.add('active');
-    } else {
-      step.classList.remove('active');
-    }
-  });
 
   // Track state changes client-side
   const lastKnownState = getLastState();
