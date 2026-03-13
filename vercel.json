@@ -18,6 +18,10 @@
       "dest": "/api/health.js"
     },
     {
+      "src": "/api/newsletter",
+      "dest": "/api/newsletter.js"
+    },
+    {
       "src": "/",
       "dest": "/index.html"
     },

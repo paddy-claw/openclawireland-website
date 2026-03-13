@@ -30,7 +30,15 @@ The OpenClaw Ireland website features an immersive dark-themed design with a uni
 - `POST /api/room` — Webhook from VPS to update state
 - `GET /api/room` — Public status endpoint (no-cache)
 - `GET /api/health` — Health check endpoint
+- `POST /api/newsletter` — Newsletter signup endpoint
 - Activity history tracking
+
+### 📧 Newsletter
+Email signup for event notifications:
+- Privacy-respecting (no marketing spam)
+- Stored in Vercel Blob
+- Confirmation messages
+- Admin stats endpoint
 
 ### 📊 Analytics
 Privacy-friendly analytics via [Plausible](https://plausible.io):
@@ -59,7 +67,8 @@ website/
 │   ├── room.js            # Combined activity/status endpoint
 │   ├── activity.js        # Legacy webhook endpoint
 │   ├── status.js          # Legacy status endpoint
-    └── health.js          # Health check endpoint
+    ├── health.js          # Health check endpoint
+    └── newsletter.js      # Newsletter signup endpoint
 └── scripts/
     ├── ping-activity.sh   # Manual activity ping script
     ├── padraig-activity.sh # Activity monitor daemon
