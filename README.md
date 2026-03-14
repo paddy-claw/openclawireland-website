@@ -42,6 +42,14 @@ Email signup for event notifications:
 - Confirmation messages
 - Admin dashboard at `/admin`
 
+### 🔒 Privacy
+GDPR-compliant privacy practices:
+- [Privacy Policy](/privacy) page with full data practices
+- No cookies used for tracking
+- Minimal data collection
+- User rights (access, deletion, portability)
+- Contact information for data requests
+
 ### 📊 Analytics
 Privacy-friendly analytics via [Plausible](https://plausible.io):
 - No cookies, GDPR-compliant
@@ -56,6 +64,7 @@ website/
 ├── index.html              # Main landing page (immersive design)
 ├── 404.html                # Custom error page
 ├── admin.html              # Admin dashboard
+├── privacy.html            # Privacy policy (GDPR compliant)
 ├── showcase.html           # Design gallery (v1-v13 variations)
 ├── design8-living.html     # Previous iteration
 ├── og-image.html           # OG image generator

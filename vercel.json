@@ -30,6 +30,10 @@
       "dest": "/admin.html"
     },
     {
+      "src": "/privacy",
+      "dest": "/privacy.html"
+    },
+    {
       "src": "/robots.txt",
       "dest": "/robots.txt",
       "headers": {
