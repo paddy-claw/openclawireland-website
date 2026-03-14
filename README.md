@@ -2,7 +2,7 @@
 
 > A living, breathing website with real-time activity simulation.
 
-**Live URL:** https://openclaw.ie (deployed on Vercel)
+**Live URL:** https://openclawhub-ireland.com (deployed on Vercel)
 
 ## Overview
 
@@ -47,7 +47,7 @@ Privacy-friendly analytics via [Plausible](https://plausible.io):
 - No cookies, GDPR-compliant
 - Lightweight script (< 1KB)
 - No personal data collection
-- Dashboard: https://plausible.io/openclaw.ie
+- Dashboard: https://plausible.io/openclawhub-ireland.com
 
 ## Project Structure
 
@@ -95,7 +95,7 @@ This secret is used to authenticate activity pings from the VPS.
 The VPS sends periodic activity updates:
 
 ```bash
-curl -X POST https://openclaw.ie/api/room \
+curl -X POST https://openclawhub-ireland.com/api/room \
   -H "Content-Type: application/json" \
   -H "X-Webhook-Secret: $WEBHOOK_SECRET" \
   -d '{"state":"working","tool":"web_search","intensity":2}'

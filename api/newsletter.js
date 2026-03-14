@@ -36,7 +36,7 @@ export default async function handler(req, res) {
       email: email.toLowerCase().trim(),
       name: name.trim(),
       subscribedAt: new Date().toISOString(),
-      source: req.headers.referer || 'openclaw.ie',
+      source: req.headers.referer || 'openclawhub-ireland.com',
       userAgent: req.headers['user-agent'] || 'unknown'
     };
 

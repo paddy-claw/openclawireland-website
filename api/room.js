@@ -1,19 +1,23 @@
 // Combined endpoint - handles both POST (activity) and GET (status)
-// Uses Vercel Blob as primary persistent store for all state.
-// globals are NOT trusted as primary source — Blob is loaded on every invocation.
+// Uses Redis (REDIS_URL env var) for persistent state storage.
 
-let blobModule;
-try {
-  blobModule = await import('@vercel/blob');
-} catch (e) {
-  console.log('Blob module not available:', e.message);
-}
+import { createClient } from 'redis';
 
-const BLOB_KEY = 'activity-history.json';
+const STATE_KEY = 'padraig:state';
 const MAX_HISTORY = 20;
 
 // In-memory cache for the current invocation only
 let memState = null;
+let redisClient = null;
+
+async function getRedis() {
+  if (!redisClient) {
+    redisClient = createClient({ url: process.env.REDIS_URL });
+    redisClient.on('error', (e) => console.log('Redis error:', e.message));
+    await redisClient.connect();
+  }
+  return redisClient;
+}
 
 function defaultState() {
   return {
@@ -26,33 +30,29 @@ function defaultState() {
 }
 
 async function loadState() {
-  if (!blobModule) return memState || defaultState();
   try {
-    const blob = await blobModule.get(BLOB_KEY);
-    if (!blob) return defaultState();
-    const text = await blob.text();
-    const parsed = JSON.parse(text);
+    const redis = await getRedis();
+    const data = await redis.get(STATE_KEY);
+    if (!data) return defaultState();
+    const parsed = JSON.parse(data);
     // Migrate legacy format (plain array stored before this change)
     if (Array.isArray(parsed)) {
       return { ...defaultState(), history: parsed };
     }
     return parsed;
   } catch (e) {
-    console.log('Blob load failed, using memory cache:', e.message);
+    console.log('Redis load failed, using memory cache:', e.message);
     return memState || defaultState();
   }
 }
 
 async function saveState(state) {
   memState = state;
-  if (!blobModule) return;
   try {
-    await blobModule.put(BLOB_KEY, JSON.stringify(state), {
-      access: 'public',
-      contentType: 'application/json'
-    });
+    const redis = await getRedis();
+    await redis.set(STATE_KEY, JSON.stringify(state));
   } catch (e) {
-    console.log('Blob save failed:', e.message);
+    console.log('Redis save failed:', e.message);
   }
 }
 
@@ -124,7 +124,7 @@ export default async function handler(req, res) {
           minute: '2-digit'
         }),
         history: state.history,
-        _blobAvailable: !!blobModule
+        _store: 'kv'
       });
     }
 
